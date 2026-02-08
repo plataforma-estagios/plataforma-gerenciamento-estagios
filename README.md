@@ -33,4 +33,4 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 * **HTML/CSS**
 
 ## :construction: Status do Projeto
-:warning: **Em desenvolvimento** - Primeira Iteração (Configuração do Ambiente e Repositórios).
+:warning: **Em desenvolvimento** - Primeira Iteração (Configuração do Ambiente e Repositórios)...
