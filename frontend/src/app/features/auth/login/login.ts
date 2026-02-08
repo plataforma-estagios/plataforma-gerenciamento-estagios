@@ -32,8 +32,15 @@ export class Login {
   onSubmit() {
     if (this.form.invalid) return;
 
-    this.authService.login({ ...this.form.value, role: this.role });
-
-    this.router.navigate(['/users/profile']);
+    this.authService.login({...this.form.value, role: this.role}).subscribe({
+      next: (res) => {
+        localStorage.setItem("auth_token", res.token);
+        this.router.navigate(['/users/profile']);
+      },
+      error: (err) => {
+        console.error('Erro de login', err);
+        alert('Falha na autenticação!');
+      }
+    });
   }
 }

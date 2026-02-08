@@ -6,6 +6,11 @@ import { jobsRoutes } from './features/jobs/jobs.routes';
 
 export const routes: Routes = [
     {
+      path: '',
+      redirectTo: 'auth/login',
+      pathMatch: 'full'
+    },
+    {
         path: 'auth',
         children: authRoutes
     },
@@ -18,5 +23,9 @@ export const routes: Routes = [
         path: 'jobs',
         component: MainLayout,
         children: jobsRoutes
+    },
+    {
+      path: '**',
+      redirectTo: 'auth/login'
     }
 ];

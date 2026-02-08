@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
+import { HttpClient } from '@angular/common/http';
 
 interface LoginDTO {
   email: string;
@@ -20,29 +21,60 @@ interface RegisterDTO {
   role: "candidate" | "company";
 }
 
-const mockedCandidateToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NldWlsdG9uLnNpcXVlaXJhQGdtYWlsLmNvbSIsInJvbGUiOiJjYW5kaWRhdGUiLCJleHAiOjE1MTYyMzkwMjJ9.3BCH23-CtK4IVM7fzuUuN9nehF9ggEOp51pWkqGyFJo";
-
-const mockedCompanyToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NldWlsdG9uLnNpcXVlaXJhQGdtYWlsLmNvbSIsInJvbGUiOiJjb21wYW55IiwiZXhwIjoxNTE2MjM5MDIyfQ.YMg0RLFhXqC9UikY0EF90qzQ_WjX0r0wgFtNwakMXEc";
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private TOKEN_KEY = "auth_token";
 
+  constructor(private http: HttpClient) {}
+
   login({ email, password, role }: LoginDTO) {
-    if (email && password && role) {
-      // No lugar de mockar, deveria ser uma chamada para o backend
-      const token = role === "candidate" ? mockedCandidateToken : mockedCompanyToken;
-      localStorage.setItem(this.TOKEN_KEY, token);
-      return true;
-    } else {
-      return false;
-    }
+      this.http.post<{ token: string }>(
+        'http://localhost:8080/auth/login',
+        { email, password, role }
+      ).subscribe({
+        next: (res) => {
+          localStorage.setItem(this.TOKEN_KEY, res.token);
+        },
+        error: () => {
+          console.error('Erro ao autenticar');
+        }
+      });
+      return this.http.post<{ token: string }>(
+        'http://localhost:8080/auth/login',
+        { email, password, role }
+      );
   }
 
   register({ name, email, password, cpf, cnpj, birthdate, location, website, sector, role }: RegisterDTO) {
-    // Chamada para o backend
+    if (name && email && password && role) {
+      this.http.post(
+        'http://localhost:8080/auth/register',
+        {
+          name,
+          email,
+          password,
+          cpf,
+          cnpj,
+          birthdate,
+          location,
+          website,
+          sector,
+          role
+        }
+      ).subscribe({
+        next: () => {
+          console.log('Usuário registrado com sucesso');
+        },
+        error: () => {
+          console.error('Erro ao registrar usuário');
+        }
+      });
+      return this.http.post('http://localhost:8080/auth/register', {email, password, role});
+    } else {
+      return false;
+    }
   }
 
   logout() {
