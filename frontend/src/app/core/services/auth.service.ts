@@ -48,8 +48,7 @@ export class AuthService {
   }
 
   register({ name, email, password, cpf, cnpj, birthdate, location, website, sector, role }: RegisterDTO) {
-    if (name && email && password && role) {
-      this.http.post(
+      return this.http.post(
         'http://localhost:8080/auth/register',
         {
           name,
@@ -63,18 +62,7 @@ export class AuthService {
           sector,
           role
         }
-      ).subscribe({
-        next: () => {
-          console.log('Usuário registrado com sucesso');
-        },
-        error: () => {
-          console.error('Erro ao registrar usuário');
-        }
-      });
-      return this.http.post('http://localhost:8080/auth/register', {email, password, role});
-    } else {
-      return false;
-    }
+      )
   }
 
   logout() {
