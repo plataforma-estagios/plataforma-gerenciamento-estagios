@@ -1,8 +1,8 @@
 package com.ufape.estagios.model;
 
 public enum UserRole {
-    ADMIN("admin"),
-    USER("user");
+    COMPANY("company"),
+    CANDIDATE("candidate");
 
     private String role;
 
