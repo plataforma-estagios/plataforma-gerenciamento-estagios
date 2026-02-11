@@ -14,14 +14,12 @@ export class Login {
   readonly Users = Users;
   readonly UserCheck = UserCheck;
 
-  private role = "candidate";
-
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -32,15 +30,15 @@ export class Login {
   onSubmit() {
     if (this.form.invalid) return;
 
-    this.authService.login({...this.form.value, role: this.role}).subscribe({
+    this.authService.login({ ...this.form.value }).subscribe({
       next: (res) => {
-        localStorage.setItem("auth_token", res.token);
+        localStorage.setItem('auth_token', res.token);
         this.router.navigate(['/users/profile']);
       },
       error: (err) => {
         console.error('Erro de login', err);
         alert('Falha na autenticação!');
-      }
+      },
     });
   }
 }
