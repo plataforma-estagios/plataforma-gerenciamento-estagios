@@ -31,15 +31,15 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String login;
+    private String email;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public Usuario(String login, String password, UserRole role) {
-        this.login = login;
+    public Usuario(String email, String password, UserRole role) {
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -55,7 +55,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override
