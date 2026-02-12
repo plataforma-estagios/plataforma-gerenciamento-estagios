@@ -46,6 +46,6 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 - [x] Criação da entidade Usuário e perfis (Admin/User).
 - [x] Endpoints de Login e Registro.
 
-**Frontend (Pendente):**
+**Frontend (Finalizado):**
 - [x] Desenvolvimento da tela de Login.
-- [ ] Integração com a API..
+- [x] Integração com a API.
