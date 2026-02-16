@@ -38,7 +38,7 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 - [x] Configuração do ambiente Java e Spring Boot.
 - [x] Configuração do banco de dados PostgreSQL.
 - [x] Inicialização do projeto Frontend com Angular.
-- [x] Criação dos repositórios e versionamento inicial.
+- [x] Criação dos reposRio e versionamento inicial.
 
 ### ✅ Iteração 2: Autenticação e Segurança (Concluída)
 **Backend (Finalizado):**
@@ -49,3 +49,15 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 **Frontend (Finalizado):**
 - [x] Desenvolvimento da tela de Login.
 - [x] Integração com a API.
+
+### 🔄 Iteração 3: Gerenciamento de Vagas (Em andamento)
+**Backend (Finalizado):**
+- [x] Criação da entidade Vaga, DTOs e Enumerações (Localização, Tipo de Vaga).
+- [x] Restrição de segurança (Apenas empresas criam/editam vagas).
+- [x] Endpoints CRUD de Vagas (`/api/vagas`).
+- [x] Testes unitários do serviço de vagas.
+
+**Frontend (Em andamento):**
+- [ ] Serviço Angular (`JobsService`) com injeção de Token JWT.
+- [ ] Tela de Listagem de Vagas disponíveis.
+- [ ] Tela de Criação de Vagas com validação de formulário.

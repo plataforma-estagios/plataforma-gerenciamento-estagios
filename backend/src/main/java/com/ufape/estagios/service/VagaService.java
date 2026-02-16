@@ -2,6 +2,7 @@ package com.ufape.estagios.service;
 
 import com.ufape.estagios.dto.VagaRequestDTO;
 import com.ufape.estagios.dto.VagaResponseDTO;
+import com.ufape.estagios.mapper.VagaMapper;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.UserRole;
 import com.ufape.estagios.model.Vaga;
@@ -28,18 +29,7 @@ public class VagaService{
             throw new RuntimeException("Apenas empresas podem cadastrar vagas");
         }
 
-        Vaga vaga = new Vaga();
-        vaga.setTitulo(dto.titulo());
-        vaga.setDescricao(dto.descricao());
-        vaga.setRequisitos(dto.requisitos());
-        vaga.setAreaConhecimento(dto.areaConhecimento());
-        vaga.setTipoVaga(dto.tipoVaga());
-        vaga.setLocalizacao(dto.localizacao());
-        vaga.setPeriodoTurno(dto.periodoTurno());
-        vaga.setPrazoCandidatura(dto.prazoCandidatura());
-        vaga.setBeneficios(dto.beneficios());
-        vaga.setSalario(dto.salario());
-        vaga.setEmpresa(empresa);
+        Vaga vaga = VagaMapper.toEntity(dto, empresa);
 
         Vaga vagaSalva = vagaRepository.save(vaga);
 
@@ -84,16 +74,7 @@ public class VagaService{
             throw new RuntimeException("Você não tem permissão para editar esta vaga");
         }
 
-        vaga.setTitulo(dto.titulo());
-        vaga.setDescricao(dto.descricao());
-        vaga.setRequisitos(dto.requisitos());
-        vaga.setAreaConhecimento(dto.areaConhecimento());
-        vaga.setTipoVaga(dto.tipoVaga());
-        vaga.setLocalizacao(dto.localizacao());
-        vaga.setPeriodoTurno(dto.periodoTurno());
-        vaga.setPrazoCandidatura(dto.prazoCandidatura());
-        vaga.setBeneficios(dto.beneficios());
-        vaga.setSalario(dto.salario());
+        vaga = VagaMapper.updateVaga(vaga, dto);
 
         Vaga vagaAtualizada = vagaRepository.save(vaga);
 
