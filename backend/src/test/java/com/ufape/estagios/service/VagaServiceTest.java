@@ -45,29 +45,22 @@ class VagaServiceTest {
 
     @BeforeEach
     void setUp() {
-        empresa = new Usuario();
-        empresa.setId(1L);
-        empresa.setEmail("empresa@test.com");
-        empresa.setPassword("password");
-        empresa.setRole(UserRole.COMPANY);
+        // CORREÇÃO 1: Usando o construtor cheio em vez de Setters
+        empresa = new Usuario(1L, "empresa@test.com", "password", UserRole.COMPANY);
+        candidato = new Usuario(2L, "candidato@test.com", "password", UserRole.CANDIDATE);
 
-        candidato = new Usuario();
-        candidato.setId(2L);
-        candidato.setEmail("candidato@test.com");
-        candidato.setPassword("password");
-        candidato.setRole(UserRole.CANDIDATE);
-
+        // CORREÇÃO 2: Colocando Localizacao e TipoVaga na ordem correta do DTO
         vagaRequestDTO = new VagaRequestDTO(
                 "Desenvolvedor Java",
                 "Vaga para desenvolvedor Java Júnior com conhecimento em Spring Boot",
                 "Conhecimento em Java, Spring Boot, MySQL",
                 "Tecnologia da Informação",
-                TipoVaga.EMPREGO,
-                Localizacao.HIBRIDO,
+                Localizacao.HIBRIDO, // Era o 5º argumento
                 "Integral - 8h às 18h",
                 LocalDate.now().plusDays(30),
                 "Vale alimentação, Vale transporte",
-                "R$ 3.500,00"
+                "R$ 3.500,00",
+                TipoVaga.EMPREGO // Era o último argumento
         );
 
         vaga = new Vaga();
@@ -187,7 +180,6 @@ class VagaServiceTest {
     void deveLancarExcecaoQuandoVagaNaoEncontrada() {
         when(vagaRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             vagaService.buscarVagaPorId(999L);
         });
@@ -198,28 +190,26 @@ class VagaServiceTest {
 
     @Test
     void deveAtualizarVagaComSucesso() {
-        // Arrange
         when(authentication.getPrincipal()).thenReturn(empresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
         when(vagaRepository.save(any(Vaga.class))).thenReturn(vaga);
 
+        // CORREÇÃO 3: Ordem arrumada aqui também!
         VagaRequestDTO novosDados = new VagaRequestDTO(
                 "Desenvolvedor Java Pleno",
                 "Vaga atualizada",
                 "Mais de 2 anos de experiência",
                 "TI",
-                TipoVaga.EMPREGO,
                 Localizacao.REMOTO,
                 "Flexível",
                 LocalDate.now().plusDays(60),
                 "Plano de saúde",
-                "R$ 6.000,00"
+                "R$ 6.000,00",
+                TipoVaga.EMPREGO
         );
 
-        // Act
         VagaResponseDTO response = vagaService.atualizarVaga(1L, novosDados);
 
-        // Assert
         assertNotNull(response);
         verify(vagaRepository, times(1)).findById(1L);
         verify(vagaRepository, times(1)).save(any(Vaga.class));
@@ -227,17 +217,12 @@ class VagaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoEmpresaTentaEditarVagaDeOutraEmpresa() {
-        // Arrange
-        Usuario outraEmpresa = new Usuario();
-        outraEmpresa.setId(3L);
-        outraEmpresa.setEmail("outra@test.com");
-        outraEmpresa.setPassword("password");
-        outraEmpresa.setRole(UserRole.COMPANY);
+        // CORREÇÃO 4: Usando construtor cheio
+        Usuario outraEmpresa = new Usuario(3L, "outra@test.com", "password", UserRole.COMPANY);
 
         when(authentication.getPrincipal()).thenReturn(outraEmpresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             vagaService.atualizarVaga(1L, vagaRequestDTO);
         });
@@ -248,15 +233,12 @@ class VagaServiceTest {
 
     @Test
     void deveDesativarVagaComSucesso() {
-        // Arrange
         when(authentication.getPrincipal()).thenReturn(empresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
         when(vagaRepository.save(any(Vaga.class))).thenReturn(vaga);
 
-        // Act
         vagaService.desativarVaga(1L);
 
-        // Assert
         verify(vagaRepository, times(1)).findById(1L);
         verify(vagaRepository, times(1)).save(vaga);
         assertFalse(vaga.getAtiva());
@@ -264,12 +246,8 @@ class VagaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoEmpresaTentaDesativarVagaDeOutraEmpresa() {
-        // Arrange
-        Usuario outraEmpresa = new Usuario();
-        outraEmpresa.setId(3L);
-        outraEmpresa.setEmail("outra@test.com");
-        outraEmpresa.setPassword("password");
-        outraEmpresa.setRole(UserRole.COMPANY);
+        // CORREÇÃO 5: Usando construtor cheio
+        Usuario outraEmpresa = new Usuario(3L, "outra@test.com", "password", UserRole.COMPANY);
 
         when(authentication.getPrincipal()).thenReturn(outraEmpresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));

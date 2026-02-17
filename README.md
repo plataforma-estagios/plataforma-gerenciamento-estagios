@@ -47,6 +47,7 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 - [x] Configuração do banco de dados PostgreSQL.
 - [x] Inicialização do projeto Frontend com Angular.
 - [x] Criação dos reposRio e versionamento inicial.
+- [x] Criação dos reposRio e versionamento inicial.
 
 ### ✅ Iteração 2: Autenticação e Segurança (Concluída)
 

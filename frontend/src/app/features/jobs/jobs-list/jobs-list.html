@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="header">
+    <h2>Oportunidades Disponíveis</h2>
+    <button routerLink="create" class="btn-primary">+ Nova Vaga</button>
+  </div>
+
+  <div *ngIf="erro" class="error-msg">{{ erro }}</div>
+
+  <div class="grid">
+    <div *ngFor="let vaga of vagas" class="card">
+      <h3>{{ vaga.titulo }}</h3>
+      <p class="company">Empresa: {{ vaga.empresaEmail }}</p>
+      <p>{{ vaga.descricao }}</p>
+      
+      <div class="tags">
+        <span class="tag">📍 {{ vaga.localizacao }}</span>
+        <span class="tag">💼 {{ vaga.tipoVaga }}</span>
+        <span class="tag" *ngIf="vaga.salario">💰 {{ vaga.salario }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="vagas.length === 0 && !erro" class="empty">
+      <p>Nenhuma vaga encontrada no momento.</p>
+    </div>
+  </div>
+</div>
