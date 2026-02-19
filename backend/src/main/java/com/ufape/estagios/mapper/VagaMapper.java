@@ -5,9 +5,9 @@ import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 
 public class VagaMapper {
-	
-	public static Vaga toEntity(VagaRequestDTO dto, Usuario empresa) {
-		Vaga vaga = new Vaga();
+
+    public static Vaga toEntity(VagaRequestDTO dto, Usuario empresa) {
+        Vaga vaga = new Vaga();
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
         vaga.setRequisitos(dto.requisitos());
@@ -19,12 +19,12 @@ public class VagaMapper {
         vaga.setBeneficios(dto.beneficios());
         vaga.setSalario(dto.salario());
         vaga.setEmpresa(empresa);
-        
+
         return vaga;
-	}
-	
-	public static Vaga updateVaga(Vaga vaga, VagaRequestDTO dto) {
-		vaga.setTitulo(dto.titulo());
+    }
+
+    public static Vaga updateVaga(Vaga vaga, VagaRequestDTO dto) {
+        vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
         vaga.setRequisitos(dto.requisitos());
         vaga.setAreaConhecimento(dto.areaConhecimento());
@@ -34,7 +34,7 @@ public class VagaMapper {
         vaga.setPrazoCandidatura(dto.prazoCandidatura());
         vaga.setBeneficios(dto.beneficios());
         vaga.setSalario(dto.salario());
-        
+
         return vaga;
-	}
+    }
 }

@@ -1,6 +1,7 @@
 package com.ufape.estagios.dto;
 
 import com.ufape.estagios.model.Localizacao;
+import com.ufape.estagios.model.StatusDaVaga;
 import com.ufape.estagios.model.TipoVaga;
 import com.ufape.estagios.model.Vaga;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 public record VagaResponseDTO(
         Long id,
         String titulo,
-        String nomeEmpresa, 
+        String nomeEmpresa,
         String descricao,
         String requisitos,
         String areaConhecimento,
@@ -22,8 +23,8 @@ public record VagaResponseDTO(
         String salario,
         Long empresaId,
         String empresaEmail,
-        Boolean ativa
-) {
+        StatusDaVaga status,
+        Boolean ativa) {
     public static VagaResponseDTO fromEntity(Vaga vaga) {
         return new VagaResponseDTO(
                 vaga.getId(),
@@ -41,7 +42,7 @@ public record VagaResponseDTO(
                 vaga.getSalario(),
                 vaga.getEmpresa() != null ? vaga.getEmpresa().getId() : null,
                 vaga.getEmpresa() != null ? vaga.getEmpresa().getEmail() : null,
-                vaga.isAtiva() // MUDANÇA AQUI: de getAtiva() para isAtiva()
-        );
+                vaga.getStatus(),
+                vaga.isAtiva());
     }
 }

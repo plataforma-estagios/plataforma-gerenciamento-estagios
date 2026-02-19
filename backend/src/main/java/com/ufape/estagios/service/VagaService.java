@@ -8,6 +8,7 @@ import com.ufape.estagios.model.UserRole;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.model.TipoVaga;
 import com.ufape.estagios.model.Localizacao;
+import com.ufape.estagios.model.StatusDaVaga;
 import com.ufape.estagios.repository.VagaRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class VagaService {
         }
 
         Vaga vaga = VagaMapper.toEntity(dto, empresa);
+        vaga.setStatus(StatusDaVaga.EM_ABERTO);
         Vaga vagaSalva = vagaRepository.save(vaga);
         return VagaResponseDTO.fromEntity(vagaSalva);
     }
@@ -63,14 +65,16 @@ public class VagaService {
             if (tipo != null && !tipo.isEmpty()) {
                 try {
                     predicates.add(cb.equal(root.get("tipoVaga"), TipoVaga.valueOf(tipo.toUpperCase())));
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
             }
 
             // Filtro opcional por Localização
             if (local != null && !local.isEmpty()) {
                 try {
                     predicates.add(cb.equal(root.get("localizacao"), Localizacao.valueOf(local.toUpperCase())));
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
