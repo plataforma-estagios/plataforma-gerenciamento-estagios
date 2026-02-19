@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../../core/services/auth.guard';
+import { roleGuard } from '../../core/services/role.guard';
 import { Candidate } from './candidate/candidate';
 import { Company } from './company/company';
 
@@ -7,11 +7,11 @@ export const usersRoutes: Routes = [
   {
     path: 'candidate',
     component: Candidate,
-    canActivate: [authGuard],
+    canActivate: [() => roleGuard('CANDIDATE')()],
   },
   {
     path: 'company',
     component: Company,
-    canActivate: [authGuard],
+    canActivate: [() => roleGuard('COMPANY')()],
   },
 ];

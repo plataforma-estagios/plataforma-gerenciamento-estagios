@@ -201,7 +201,6 @@ class VagaServiceTest {
     void deveLancarExcecaoQuandoVagaNaoEncontrada() {
         when(vagaRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             vagaService.buscarVagaPorId(999L);
         });
@@ -212,7 +211,7 @@ class VagaServiceTest {
 
     @Test
     void deveAtualizarVagaComSucesso() {
-        // Arrange
+
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(empresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
@@ -230,10 +229,8 @@ class VagaServiceTest {
                 "R$ 6.000,00",
                 TipoVaga.EMPREGO);
 
-        // Act
         VagaResponseDTO response = vagaService.atualizarVaga(1L, novosDados);
 
-        // Assert
         assertNotNull(response);
         verify(vagaRepository, times(1)).findById(1L);
         verify(vagaRepository, times(1)).save(any(Vaga.class));
@@ -241,7 +238,7 @@ class VagaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoEmpresaTentaEditarVagaDeOutraEmpresa() {
-        // Arrange
+
         when(securityContext.getAuthentication()).thenReturn(authentication);
 
         Usuario outraEmpresa = new Usuario();
@@ -253,7 +250,6 @@ class VagaServiceTest {
         when(authentication.getPrincipal()).thenReturn(outraEmpresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             vagaService.atualizarVaga(1L, vagaRequestDTO);
         });
@@ -264,16 +260,14 @@ class VagaServiceTest {
 
     @Test
     void deveDesativarVagaComSucesso() {
-        // Arrange
+
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(empresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
         when(vagaRepository.save(any(Vaga.class))).thenReturn(vaga);
 
-        // Act
         vagaService.desativarVaga(1L);
 
-        // Assert
         verify(vagaRepository, times(1)).findById(1L);
         verify(vagaRepository, times(1)).save(vaga);
         assertEquals(vaga.getStatus(), StatusDaVaga.ENCERRADA);
@@ -281,7 +275,7 @@ class VagaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoEmpresaTentaDesativarVagaDeOutraEmpresa() {
-        // Arrange
+
         when(securityContext.getAuthentication()).thenReturn(authentication);
 
         Usuario outraEmpresa = new Usuario();
