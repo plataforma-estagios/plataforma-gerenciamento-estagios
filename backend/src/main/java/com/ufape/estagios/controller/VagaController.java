@@ -27,10 +27,16 @@ public class VagaController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<VagaResponseDTO>> listarVagasAtivas() {
-        List<VagaResponseDTO> vagas = vagaService.listarVagasAtivas();
+    public ResponseEntity<List<VagaResponseDTO>> listarVagas(
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String localizacao,
+            @RequestParam(defaultValue = "dataPublicacao") String sortBy
+    ) {
+        
+        List<VagaResponseDTO> vagas = vagaService.listarVagasParaEstudantes(area, tipo, localizacao, sortBy);
         return ResponseEntity.ok(vagas);
     }
 

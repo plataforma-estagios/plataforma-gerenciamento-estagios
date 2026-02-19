@@ -6,34 +6,80 @@ import com.ufape.estagios.mapper.VagaMapper;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.UserRole;
 import com.ufape.estagios.model.Vaga;
+import com.ufape.estagios.model.TipoVaga;
+import com.ufape.estagios.model.Localizacao;
 import com.ufape.estagios.repository.VagaRepository;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class VagaService{
+public class VagaService {
     @Autowired
     private VagaRepository vagaRepository;
 
     @Transactional
-    public VagaResponseDTO cadastrarVaga(VagaRequestDTO dto){
+    public VagaResponseDTO cadastrarVaga(VagaRequestDTO dto) {
         Usuario empresa = getUsuarioAutenticado();
 
-        if(empresa.getRole() != UserRole.COMPANY){
+        if (empresa.getRole() != UserRole.COMPANY) {
             throw new RuntimeException("Apenas empresas podem cadastrar vagas");
         }
 
         Vaga vaga = VagaMapper.toEntity(dto, empresa);
-
         Vaga vagaSalva = vagaRepository.save(vaga);
-
         return VagaResponseDTO.fromEntity(vagaSalva);
+    }
+
+    public List<VagaResponseDTO> listarVagasParaEstudantes(String area, String tipo, String local, String sortBy) {
+        // Define a ordenação: padrão é data de publicação (mais recentes primeiro)
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy != null ? sortBy : "dataPublicacao");
+
+        Specification<Vaga> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            // CRITÉRIO DE ACEITE: Somente vagas ativas
+            predicates.add(cb.isTrue(root.get("ativa")));
+
+            // CRITÉRIO DE ACEITE: Somente vagas onde o prazo não venceu
+            predicates.add(cb.greaterThanOrEqualTo(root.get("prazoCandidatura"), LocalDate.now()));
+
+            // Filtro opcional por Área de Conhecimento
+            if (area != null && !area.isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get("areaConhecimento")), "%" + area.toLowerCase() + "%"));
+            }
+
+            // Filtro opcional por Tipo de Vaga (converte String para Enum)
+            if (tipo != null && !tipo.isEmpty()) {
+                try {
+                    predicates.add(cb.equal(root.get("tipoVaga"), TipoVaga.valueOf(tipo.toUpperCase())));
+                } catch (IllegalArgumentException ignored) {}
+            }
+
+            // Filtro opcional por Localização
+            if (local != null && !local.isEmpty()) {
+                try {
+                    predicates.add(cb.equal(root.get("localizacao"), Localizacao.valueOf(local.toUpperCase())));
+                } catch (IllegalArgumentException ignored) {}
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return vagaRepository.findAll(spec, sort)
+                .stream()
+                .map(VagaResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public List<VagaResponseDTO> listarVagasAtivas() {
@@ -75,9 +121,7 @@ public class VagaService{
         }
 
         vaga = VagaMapper.updateVaga(vaga, dto);
-
         Vaga vagaAtualizada = vagaRepository.save(vaga);
-
         return VagaResponseDTO.fromEntity(vagaAtualizada);
     }
 
@@ -100,5 +144,4 @@ public class VagaService{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Usuario) authentication.getPrincipal();
     }
-
 }

@@ -4,23 +4,78 @@
     <button routerLink="create" class="btn-primary">+ Nova Vaga</button>
   </div>
 
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>Área de Conhecimento</label>
+      <input 
+        type="text" 
+        [(ngModel)]="filtroArea" 
+        (input)="aplicarFiltros()" 
+        placeholder="Ex: TI, Administração...">
+    </div>
+
+    <div class="filter-group">
+      <label>Tipo</label>
+      <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+        <option value="">Todos</option>
+        <option value="ESTAGIO">Estágio</option>
+        <option value="TRAINEE">Trainee</option>
+        <option value="EMPREGO">Emprego</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Localização</label>
+      <select [(ngModel)]="filtroLocal" (change)="aplicarFiltros()">
+        <option value="">Todas</option>
+        <option value="PRESENCIAL">Presencial</option>
+        <option value="REMOTO">Remoto</option>
+        <option value="HIBRIDO">Híbrido</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Ordenar por</label>
+      <select [(ngModel)]="ordenacao" (change)="aplicarFiltros()">
+        <option value="dataPublicacao">Mais Recentes</option>
+        <option value="prazoCandidatura">Prazo de Inscrição</option>
+      </select>
+    </div>
+  </div>
+
   <div *ngIf="erro" class="error-msg">{{ erro }}</div>
 
   <div class="grid">
     <div *ngFor="let vaga of vagas" class="card">
-      <h3>{{ vaga.titulo }}</h3>
-      <p class="company">Empresa: {{ vaga.empresaEmail }}</p>
-      <p>{{ vaga.descricao }}</p>
+      <div class="card-header">
+        <h3>{{ vaga.titulo }}</h3>
+        <span class="company-name">🏢 {{ vaga.nomeEmpresa }}</span>
+      </div>
       
+      <p class="description">{{ vaga.descricao }}</p>
+      
+      <div class="details">
+        <p><strong>Requisitos:</strong> {{ vaga.requisitos }}</p>
+        <p><strong>Área:</strong> {{ vaga.areaConhecimento }}</p>
+        <p *ngIf="vaga.periodoTurno"><strong>Turno/Carga:</strong> {{ vaga.periodoTurno }}</p>
+      </div>
+
       <div class="tags">
         <span class="tag">📍 {{ vaga.localizacao }}</span>
         <span class="tag">💼 {{ vaga.tipoVaga }}</span>
         <span class="tag" *ngIf="vaga.salario">💰 {{ vaga.salario }}</span>
       </div>
+
+      <div class="card-footer">
+        <span class="date">Publicado em: {{ vaga.dataPublicacao | date:'dd/MM/yyyy' }}</span>
+        <span class="deadline" [class.urgent]="vaga.prazoCandidatura">
+          Prazo: {{ vaga.prazoCandidatura | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
     </div>
 
     <div *ngIf="vagas.length === 0 && !erro" class="empty">
-      <p>Nenhuma vaga encontrada no momento.</p>
+      <p>Nenhuma vaga encontrada para os filtros selecionados.</p>
     </div>
   </div>
 </div>

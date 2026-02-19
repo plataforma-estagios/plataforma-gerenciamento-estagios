@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'; // Importamos HttpParams
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,8 +18,18 @@ export class JobsService {
     };
   }
 
-  listar(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, this.getHeaders());
+  listar(area?: string, tipo?: string, localizacao?: string, sortBy?: string): Observable<any[]> {
+    let params = new HttpParams();
+
+    if (area) params = params.set('area', area);
+    if (tipo) params = params.set('tipo', tipo);
+    if (localizacao) params = params.set('localizacao', localizacao);
+    if (sortBy) params = params.set('sortBy', sortBy);
+
+    return this.http.get<any[]>(this.apiUrl, { 
+      ...this.getHeaders(), 
+      params 
+    });
   }
 
   criar(vaga: any): Observable<any> {

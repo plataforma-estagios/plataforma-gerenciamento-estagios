@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public record VagaResponseDTO(
         Long id,
         String titulo,
+        String nomeEmpresa, 
         String descricao,
         String requisitos,
         String areaConhecimento,
@@ -27,6 +28,7 @@ public record VagaResponseDTO(
         return new VagaResponseDTO(
                 vaga.getId(),
                 vaga.getTitulo(),
+                vaga.getEmpresa().getEmail(),
                 vaga.getDescricao(),
                 vaga.getRequisitos(),
                 vaga.getAreaConhecimento(),

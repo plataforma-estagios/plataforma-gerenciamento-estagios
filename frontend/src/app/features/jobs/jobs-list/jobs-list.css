@@ -1,12 +1,146 @@
-.container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; font-family: sans-serif; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.btn-primary { background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; text-decoration: none;}
-.btn-primary:hover { background: #1d4ed8; }
-.grid { display: grid; gap: 1.5rem; }
-.card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e5e7eb; }
-.card h3 { margin: 0 0 0.5rem 0; color: #1f2937; }
-.company { color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem; }
-.tags { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
-.tag { background: #f3f4f6; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; color: #374151; font-weight: 500; }
-.error-msg { background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
-.empty { text-align: center; color: #6b7280; padding: 3rem; background: #f9fafb; border-radius: 0.5rem; }
+.container { 
+    max-width: 900px; 
+    margin: var(--space-8) auto; 
+    padding: 0 var(--space-4); 
+}
+
+.header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: var(--space-8); 
+}
+
+.btn-primary { 
+    background: var(--color-primary-500); 
+    color: var(--color-text-inverse); 
+    border: none; 
+    padding: var(--space-3) var(--space-6); 
+    border-radius: var(--radius-md); 
+    cursor: pointer; 
+    font-weight: var(--font-weight-bold); 
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover { 
+    background: var(--color-primary-600); 
+}
+
+.filters-bar {
+    background: var(--color-bg-muted);
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-default);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-group label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+}
+
+.filter-group input, 
+.filter-group select {
+    padding: var(--space-2);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+}
+
+/* GRID E CARDS */
+.grid { 
+    display: grid; 
+    gap: var(--space-6); 
+}
+
+.card { 
+    background: var(--color-bg-card); 
+    padding: var(--space-6); 
+    border-radius: var(--radius-md); 
+    box-shadow: var(--shadow-sm); 
+    border: 1px solid var(--color-border-default); 
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-4);
+}
+
+.company-name { 
+    color: var(--color-primary-500); 
+    font-size: var(--font-size-sm); 
+    font-weight: var(--font-weight-semibold); 
+    background: var(--color-primary-50);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+}
+
+.details {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+    padding: var(--space-3);
+    background: var(--color-bg-page);
+    border-radius: var(--radius-sm);
+}
+
+.tags { 
+    display: flex; 
+    gap: var(--space-2); 
+    margin-top: var(--space-4); 
+    flex-wrap: wrap; 
+}
+
+.tag { 
+    background: var(--color-bg-muted); 
+    padding: var(--space-1) var(--space-3); 
+    border-radius: var(--radius-full); 
+    font-size: var(--font-size-xs); 
+    color: var(--color-text-secondary); 
+    font-weight: var(--font-weight-medium); 
+}
+
+.card-footer {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-default);
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.error-msg { 
+    background: #FEE2E2;
+    color: var(--color-error); 
+    padding: var(--space-4); 
+    border-radius: var(--radius-md); 
+    margin-bottom: var(--space-4); 
+}
+
+.empty { 
+    text-align: center; 
+    color: var(--color-text-secondary); 
+    padding: var(--space-10); 
+    background: var(--color-bg-muted); 
+    border-radius: var(--radius-md); 
+}
