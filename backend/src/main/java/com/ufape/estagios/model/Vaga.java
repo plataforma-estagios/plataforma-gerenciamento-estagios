@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "vagas")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vaga{
+public class Vaga {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,13 +29,15 @@ public class Vaga{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Localizacao localizacao;
-    
+
+    @Enumerated(EnumType.STRING)
     private TipoVaga tipoVaga;
 
     private String periodoTurno;
 
     @Column(nullable = false)
     private LocalDate dataPublicacao;
+
     private LocalDate prazoCandidatura;
     private String beneficios;
     private String salario;
@@ -44,13 +46,20 @@ public class Vaga{
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
     private Usuario empresa;
-    
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusDaVaga status;
 
+    private boolean ativa = true;
+
     @PrePersist
-    protected void onCreate(){
-        if(dataPublicacao == null){
+    protected void onCreate() {
+        if (dataPublicacao == null) {
             dataPublicacao = LocalDate.now();
+        }
+        if (status == null) {
+            status = StatusDaVaga.EM_ABERTO;
         }
     }
 }

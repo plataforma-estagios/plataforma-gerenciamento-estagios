@@ -1,27 +1,18 @@
 package com.ufape.estagios.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ufape.estagios.dto.VagaRequestDTO;
 import com.ufape.estagios.dto.VagaResponseDTO;
 import com.ufape.estagios.service.VagaService;
-
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("api/vagas")
+@RequestMapping("/api/vagas")
 public class VagaController {
 
     @Autowired
@@ -36,10 +27,16 @@ public class VagaController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<VagaResponseDTO>> listarVagasEmAberto() {
-        List<VagaResponseDTO> vagas = vagaService.listarVagasEmAberto();
+    public ResponseEntity<List<VagaResponseDTO>> listarVagas(
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String localizacao,
+            @RequestParam(defaultValue = "dataPublicacao") String sortBy
+    ) {
+        
+        List<VagaResponseDTO> vagas = vagaService.listarVagasParaEstudantes(area, tipo, localizacao, sortBy);
         return ResponseEntity.ok(vagas);
     }
 

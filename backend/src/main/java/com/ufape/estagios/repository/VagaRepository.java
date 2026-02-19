@@ -1,24 +1,19 @@
 package com.ufape.estagios.repository;
 
-import java.util.List;
-
+import com.ufape.estagios.model.Vaga;
+import com.ufape.estagios.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor; 
 import org.springframework.stereotype.Repository;
 
-import com.ufape.estagios.model.StatusDaVaga;
-import com.ufape.estagios.model.Usuario;
-import com.ufape.estagios.model.Vaga;
+import java.util.List;
 
 @Repository
-public interface VagaRepository extends JpaRepository<Vaga, Long> {
+public interface VagaRepository extends JpaRepository<Vaga, Long>, JpaSpecificationExecutor<Vaga> { 
 
-    @Query("SELECT v FROM Vaga v WHERE v.empresa = :empresa AND v.status = :status")
-    List<Vaga> findByEmpresaAndStatus(@Param("empresa") Usuario empresa,
-            @Param("status") StatusDaVaga status);
+    List<Vaga> findByEmpresaAndAtivaTrue(Usuario empresa);
 
-    List<Vaga> findByStatus(StatusDaVaga statusDaVaga);
+    List<Vaga> findByAtivaTrue();
 
     List<Vaga> findByEmpresa(Usuario empresa);
 }
