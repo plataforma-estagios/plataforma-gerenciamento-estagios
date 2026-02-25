@@ -93,7 +93,7 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 - [ ] Refatoração de código para atender aos critérios de qualidade (0 bugs de segurança, 0 code smells críticos, < 20% de duplicação).
 
 **Implantação Contínua (CD) e Release:**
-- [ ] Containerização da aplicação com Docker.
+- [x] Containerização da aplicação com Docker.
 - [ ] Implantação automatizada do Backend no Render.
 - [ ] Implantação automatizada do Frontend no Render.
 - [ ] Publicação do Release final da iteração no repositório.
