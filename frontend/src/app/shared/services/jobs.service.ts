@@ -8,7 +8,7 @@ import { VagaModel } from './models/VagaModel';
 })
 export class JobsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/vagas';
+  private readonly apiUrl = 'https://backend-estagios.onrender.com/api/vagas';
 
   private getHeaders() {
     const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;

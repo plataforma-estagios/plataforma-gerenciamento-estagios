@@ -36,7 +36,7 @@ describe('AuthService', () => {
   it('register deve fazer POST no endpoint correto com body correto', () => {
     service.register({ email: 'teste@gmail.com', password: '123', role: 'candidate' }).subscribe();
 
-    const req = httpMock.expectOne('http://localhost:8080/auth/register');
+    const req = httpMock.expectOne('https://backend-estagios.onrender.com/auth/register');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
       email: 'teste@gmail.com',
@@ -89,7 +89,7 @@ describe('AuthService', () => {
   it('login deve fazer POST e salvar token no localStorage (seu login atual faz 2 requests)', () => {
     service.login({ email: 'teste@gmail.com', password: '123' }).subscribe();
 
-    const reqs = httpMock.match('http://localhost:8080/auth/login');
+    const reqs = httpMock.match('https://backend-estagios.onrender.com/auth/login');
     expect(reqs.length).toBe(2);
 
     for (const req of reqs) {

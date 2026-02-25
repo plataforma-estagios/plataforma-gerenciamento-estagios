@@ -35,7 +35,7 @@ export class AuthService {
 
   login({ email, password }: LoginDTO) {
     this.http
-      .post<{ token: string }>('http://localhost:8080/auth/login', { email, password })
+      .post<{ token: string }>('https://backend-estagios.onrender.com/auth/login', { email, password })
       .subscribe({
         next: (res) => {
           localStorage.setItem(this.TOKEN_KEY, res.token);
@@ -45,7 +45,7 @@ export class AuthService {
           console.error('Erro ao autenticar');
         },
       });
-    return this.http.post<{ token: string }>('http://localhost:8080/auth/login', {
+    return this.http.post<{ token: string }>('https://backend-estagios.onrender.com/auth/login', {
       email,
       password,
     });
@@ -63,7 +63,7 @@ export class AuthService {
     //sector,
     role,
   }: RegisterDTO) {
-    return this.http.post('http://localhost:8080/auth/register', {
+    return this.http.post('https://backend-estagios.onrender.com/auth/register', {
       // name,
       email,
       password,
