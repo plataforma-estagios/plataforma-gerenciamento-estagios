@@ -17,10 +17,10 @@ export class Register {
   companyForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private toastr: ToastrService,
+    private readonly fb: FormBuilder,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly toastr: ToastrService,
   ) {
     this.candidateForm = this.fb.group({
       name: ['', [Validators.required]],

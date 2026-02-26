@@ -8,11 +8,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class Modal {
   @Input() open = false;
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   @Input() title = '';
 
   onBackdropClick() {
-    this.close.emit();
+    this.closeModal.emit();
   }
 }

@@ -73,10 +73,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.register-register {
-    flex: 1;
-}
-
 .register-form {
     width: 100%;
     display: flex;

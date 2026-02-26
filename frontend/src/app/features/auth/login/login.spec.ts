@@ -15,6 +15,15 @@ describe('Login Component', () => {
   let router: Router;
   let toastrMock: { success: any; error: any };
 
+  const TOKEN_KEY = 'auth_token';
+  
+  const FAKE_USER = {
+    email: 'teste@gmail.com',
+   password: `pass-${Math.random()}`,
+  };
+
+  const MOCK_TOKEN = 'TOKEN_MOCK_TESTE';
+
   beforeEach(async () => {
     authMock = {
       login: vi.fn(),
@@ -32,7 +41,6 @@ describe('Login Component', () => {
       imports: [Login],
       providers: [
         provideRouter([]),
-
         { provide: AuthService, useValue: authMock },
         { provide: ToastrService, useValue: toastrMock },
       ],
@@ -57,34 +65,34 @@ describe('Login Component', () => {
   });
 
   it('deve logar, salvar token e navegar para COMPANY', () => {
-    component.form.setValue({ email: 'teste@gmail.com', password: '123' });
+    component.form.setValue(FAKE_USER);
 
-    authMock.login.mockReturnValue(of({ token: 'TOKEN_X' }));
+    authMock.login.mockReturnValue(of({ token: MOCK_TOKEN }));
     authMock.getRole.mockReturnValue('company');
 
     component.onSubmit();
 
-    expect(authMock.login).toHaveBeenCalledWith({ email: 'teste@gmail.com', password: '123' });
-    expect(localStorage.getItem('auth_token')).toBe('TOKEN_X');
+    expect(authMock.login).toHaveBeenCalledWith(FAKE_USER);
+    expect(localStorage.getItem(TOKEN_KEY)).toBe(MOCK_TOKEN);
     expect(router.navigate).toHaveBeenCalledWith(['/users/company']);
     expect(toastrMock.success).toHaveBeenCalledWith('Login realizado com sucesso');
   });
 
   it('deve logar, salvar token e navegar para CANDIDATE', () => {
-    component.form.setValue({ email: 'teste@gmail.com', password: '123' });
+    component.form.setValue(FAKE_USER);
 
-    authMock.login.mockReturnValue(of({ token: 'TOKEN_Y' }));
+    authMock.login.mockReturnValue(of({ token: MOCK_TOKEN }));
     authMock.getRole.mockReturnValue('candidate');
 
     component.onSubmit();
 
-    expect(localStorage.getItem('auth_token')).toBe('TOKEN_Y');
+    expect(localStorage.getItem(TOKEN_KEY)).toBe(MOCK_TOKEN);
     expect(router.navigate).toHaveBeenCalledWith(['/users/candidate']);
     expect(toastrMock.success).toHaveBeenCalledWith('Login realizado com sucesso');
   });
 
   it('deve mostrar toastr de erro quando falhar o login', () => {
-    component.form.setValue({ email: 'teste@gmail.com', password: '123' });
+    component.form.setValue(FAKE_USER);
 
     authMock.login.mockReturnValue(throwError(() => new Error('401')));
 
