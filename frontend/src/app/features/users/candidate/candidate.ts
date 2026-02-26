@@ -31,7 +31,7 @@ export class Candidate implements OnInit {
     this.email = this.authService.getEmail();
     this.carregarVagas();
   }
-  private cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   carregarVagas() {
     this.jobsService.listar().subscribe({

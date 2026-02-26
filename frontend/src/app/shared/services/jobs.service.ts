@@ -11,7 +11,7 @@ export class JobsService {
   private readonly apiUrl = 'http://localhost:8080/api/vagas';
 
   private getHeaders() {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    const token = globalThis.window === undefined ? null : localStorage.getItem('auth_token');
     return {
       headers: new HttpHeaders({
         Authorization: `Bearer ${token}`,

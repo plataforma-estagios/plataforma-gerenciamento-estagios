@@ -1,8 +1,22 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JobsService } from '../../../../shared/services/jobs.service';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { JobsService } from '../../../../shared/services/jobs.service';
 import { VagaModel } from '../../../../shared/services/models/VagaModel';
 
 @Component({
@@ -13,18 +27,16 @@ import { VagaModel } from '../../../../shared/services/models/VagaModel';
   styleUrl: './form-job.css',
 })
 export class FormJob implements OnChanges {
-  private jobsService = inject(JobsService);
-  private toastr = inject(ToastrService);
+  private readonly jobsService = inject(JobsService);
+  private readonly toastr = inject(ToastrService);
 
   @Input() vaga: VagaModel | null = null;
 
   jobForm: FormGroup;
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() closeModal = new EventEmitter<boolean>();
 
-  constructor(
-    private fb: FormBuilder,
-  ) {
+  constructor(private readonly fb: FormBuilder) {
     this.jobForm = this.fb.group({
       titulo: [this.vaga?.titulo ?? '', [Validators.required]],
       descricao: [this.vaga?.descricao ?? '', [Validators.required]],
@@ -84,25 +96,25 @@ export class FormJob implements OnChanges {
       this.jobsService.atualizar(this.vaga.id.toString(), this.jobForm.value).subscribe({
         next: () => {
           this.toastr.success('Vaga atualizada com sucesso!');
-          this.close.emit(true);
+          this.closeModal.emit(true);
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
           this.toastr.error('Erro ao atualizar. Verifique se você está logado como EMPRESA.');
-          this.close.emit(false);
-        }
+          this.closeModal.emit(false);
+        },
       });
     } else {
       this.jobsService.criar(this.jobForm.value).subscribe({
         next: () => {
           this.toastr.success('Vaga publicada com sucesso!');
-          this.close.emit(true);
+          this.closeModal.emit(true);
         },
         error: (err) => {
           console.error('Erro ao cadastrar:', err);
           this.toastr.error('Erro ao cadastrar. Verifique se você está logado como EMPRESA.');
-          this.close.emit(false);
-        }
+          this.closeModal.emit(false);
+        },
       });
     }
   }

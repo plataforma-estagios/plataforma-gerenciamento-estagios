@@ -73,13 +73,13 @@
     </div>
 </main>
 
-<app-modal [open]="modalOpen" (close)="closeModal()"
+<app-modal [open]="modalOpen" (closeModal)="closeModal()"
     [title]="modalAction === 'create' ? 'Criar vaga' : modalAction === 'edit' ? 'Editar vaga' : 'Deletar vaga'">
     @if (modalAction === 'create') {
-    <app-form-job (close)="handleActionResult($event)"></app-form-job>
+    <app-form-job (closeModal)="handleActionResult($event)"></app-form-job>
     } @else if (modalAction === 'edit') {
-    <app-form-job [vaga]="vaga" (close)="handleActionResult($event)"></app-form-job>
+    <app-form-job [vaga]="vaga" (closeModal)="handleActionResult($event)"></app-form-job>
     } @else if (modalAction === 'delete') {
-    <app-delete-job [vaga]="vaga" (close)="handleActionResult($event)"></app-delete-job>
+    <app-delete-job [vaga]="vaga" (closeModal)="handleActionResult($event)"></app-delete-job>
     }
 </app-modal>

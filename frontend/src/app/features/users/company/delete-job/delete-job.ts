@@ -13,12 +13,12 @@ import { VagaModel } from '../../../../shared/services/models/VagaModel';
   styleUrl: './delete-job.css',
 })
 export class DeleteJob {
-  private jobsService = inject(JobsService);
-  private toastr = inject(ToastrService);
+  private readonly jobsService = inject(JobsService);
+  private readonly toastr = inject(ToastrService);
 
   @Input() vaga: VagaModel | null = null;
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() closeModal = new EventEmitter<boolean>();
 
   deletar() {
     if (!this.vaga) return;
@@ -26,12 +26,12 @@ export class DeleteJob {
     this.jobsService.deletar(this.vaga.id.toString()).subscribe({
       next: () => {
         this.toastr.success('Vaga deletada com sucesso!');
-        this.close.emit(true);
+        this.closeModal.emit(true);
       },
       error: (err) => {
         console.error('Erro ao deletar:', err);
         this.toastr.error('Erro ao deletar. Verifique se você está logado como EMPRESA.');
-        this.close.emit(false);
+        this.closeModal.emit(false);
       }
     });
   }

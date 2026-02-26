@@ -29,9 +29,9 @@ interface RegisterDTO {
   providedIn: 'root',
 })
 export class AuthService {
-  private TOKEN_KEY = 'auth_token';
+  private readonly TOKEN_KEY = 'auth_token';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   login({ email, password }: LoginDTO) {
     this.http

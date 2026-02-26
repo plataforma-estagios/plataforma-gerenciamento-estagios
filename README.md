@@ -8,13 +8,13 @@
 - [João Henrique Araújo de Souza](https://github.com/jota-aga)
 - [José Uilton Ferreira de Siqueira](https://github.com/joseuilton)
 
-## :page_with_curl: Sobre o Projeto
+## 📃 Sobre o Projeto
 
 Projeto para desenvolvimento de um software Web completo (Frontend e Backend) para a disciplina de **Engenharia de Software**, ministrada pela Professora **Thaís Alves Burity Rocha**, na Universidade Federal do Agreste de Pernambuco (UFAPE). O projeto visa a avaliação da 2ª Verificação de Aprendizagem.
 
 O sistema consiste em uma **Plataforma de Gerenciamento de Estágios**, que tem como objetivo conectar discentes, empresas e a instituição de ensino. A plataforma permitirá que empresas divulguem vagas, alunos se candidatem a oportunidades e a instituição gerencie os contratos e documentos de estágio de forma centralizada e eficiente.
 
-## :round_pushpin: Objetivos
+## 📍 Objetivos
 
 O objetivo principal é aplicar os conhecimentos de desenvolvimento colaborativo e arquitetura de software. Funcionalmente, o sistema visa:
 
@@ -22,7 +22,7 @@ O objetivo principal é aplicar os conhecimentos de desenvolvimento colaborativo
 - Permitir que discentes cadastrem seus currículos e se apliquem às vagas.
 - Otimizar o acompanhamento dos processos seletivos e a gestão de documentos de estágio.
 
-## :hammer_and_wrench: Tecnologias Usadas
+## 🛠 Tecnologias Usadas
 
 O projeto está estruturado em dois diretórios principais (`/backend` e `/frontend`), utilizando:
 
@@ -43,36 +43,37 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 
 ### ✅ Iteração 1: Infraestrutura (Concluída)
 
-- [x] Configuração do ambiente Java e Spring Boot.
-- [x] Configuração do banco de dados PostgreSQL.
-- [x] Inicialização do projeto Frontend com Angular.
-- [x] Criação dos reposRio e versionamento inicial.
-- [x] Criação dos reposRio e versionamento inicial.
+- [X] Configuração do ambiente Java e Spring Boot.
+- [X] Configuração do banco de dados PostgreSQL.
+- [X] Inicialização do projeto Frontend com Angular.
+- [X] Criação dos reposRio e versionamento inicial.
+- [X] Criação dos reposRio e versionamento inicial.
 
 ### ✅ Iteração 2: Autenticação e Segurança (Concluída)
 
 **Backend (Finalizado):**
 
-- [x] Implementação do Spring Security e JWT.
-- [x] Criação da entidade Usuário e perfis (Admin/User).
-- [x] Endpoints de Login e Registro.
+- [X] Implementação do Spring Security e JWT.
+- [X] Criação da entidade Usuário e perfis (Admin/User).
+- [X] Endpoints de Login e Registro.
 
 **Frontend (Finalizado):**
 
-- [x] Desenvolvimento da tela de Login.
-- [x] Integração com a API.
+- [X] Desenvolvimento da tela de Login.
+- [X] Integração com a API.
 
-### 🔄 Iteração 3: Gerenciamento de Vagas (Em andamento)
+### ✅ Iteração 3: Gerenciamento de Vagas (Concluída)
 
 **Backend (Finalizado):**
 
-- [x] Criação da entidade Vaga, DTOs e Enumerações (Localização, Tipo de Vaga).
-- [x] Restrição de segurança (Apenas empresas criam/editam vagas).
-- [x] Endpoints CRUD de Vagas (`/api/vagas`).
-- [x] Testes unitários do serviço de vagas.
+- [X] Criação da entidade Vaga, DTOs e Enumerações (Localização, Tipo de Vaga).
+- [X] Restrição de segurança (Apenas empresas criam/editam vagas).
+- [X] Endpoints CRUD de Vagas (`/api/vagas`).
+- [X] Testes unitários do serviço de vagas.
 
-**Frontend (Em andamento):**
+**Frontend (Finalizado):**
 
-- [x] Serviço Angular (`JobsService`) com injeção de Token JWT.
-- [x] Tela de Listagem de Vagas disponíveis.
-- [x] Tela de Criação de Vagas com validação de formulário.
+- [X] Serviço Angular (`JobsService`) com injeção de Token JWT.
+- [X] Tela de Listagem de Vagas disponíveis.
+- [X] Tela de Criação de Vagas com validação de formulário.
+- [X] Testes unitários e integração nos principais services
