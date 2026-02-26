@@ -20,7 +20,7 @@ export class FormJob implements OnChanges {
 
   jobForm: FormGroup;
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() Onclose = new EventEmitter<boolean>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -84,24 +84,24 @@ export class FormJob implements OnChanges {
       this.jobsService.atualizar(this.vaga.id.toString(), this.jobForm.value).subscribe({
         next: () => {
           this.toastr.success('Vaga atualizada com sucesso!');
-          this.close.emit(true);
+          this.Onclose.emit(true);
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
           this.toastr.error('Erro ao atualizar. Verifique se você está logado como EMPRESA.');
-          this.close.emit(false);
+          this.Onclose.emit(false);
         }
       });
     } else {
       this.jobsService.criar(this.jobForm.value).subscribe({
         next: () => {
           this.toastr.success('Vaga publicada com sucesso!');
-          this.close.emit(true);
+          this.Onclose.emit(true);
         },
         error: (err) => {
           console.error('Erro ao cadastrar:', err);
           this.toastr.error('Erro ao cadastrar. Verifique se você está logado como EMPRESA.');
-          this.close.emit(false);
+          this.Onclose.emit(false);
         }
       });
     }

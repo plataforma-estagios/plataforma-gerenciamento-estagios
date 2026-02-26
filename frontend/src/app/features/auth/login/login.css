@@ -37,10 +37,6 @@
     border-bottom: 1px solid var(--color-border-default);
 }
 
-.login-register {
-    flex: 1;
-}
-
 .login-form {
     width: 100%;
     display: flex;

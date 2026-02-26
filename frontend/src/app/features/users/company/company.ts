@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { FolderOpen, LucideAngularModule, Pencil, Plus, Trash } from 'lucide-angular';
 import { VagaModel } from '../../../shared/services/models/VagaModel';
 import { JobsService } from '../../../shared/services/jobs.service';
@@ -12,7 +12,7 @@ import { DeleteJob } from './delete-job/delete-job';
   templateUrl: './company.html',
   styleUrl: './company.css',
 })
-export class Company {
+export class Company implements OnInit {
   readonly PlusIcon = Plus;
   readonly PencilIcon = Pencil;
   readonly TrashIcon = Trash;

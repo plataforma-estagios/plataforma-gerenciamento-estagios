@@ -18,7 +18,7 @@ export class DeleteJob {
 
   @Input() vaga: VagaModel | null = null;
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() Onclose = new EventEmitter<boolean>();
 
   deletar() {
     if (!this.vaga) return;
@@ -26,12 +26,12 @@ export class DeleteJob {
     this.jobsService.deletar(this.vaga.id.toString()).subscribe({
       next: () => {
         this.toastr.success('Vaga deletada com sucesso!');
-        this.close.emit(true);
+        this.Onclose.emit(true);
       },
       error: (err) => {
         console.error('Erro ao deletar:', err);
         this.toastr.error('Erro ao deletar. Verifique se você está logado como EMPRESA.');
-        this.close.emit(false);
+        this.Onclose.emit(false);
       }
     });
   }
