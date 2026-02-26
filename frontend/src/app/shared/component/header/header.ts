@@ -14,10 +14,14 @@ export class Header {
 
   isProfileMenuOpen = false;
 
+  role: string | null = null;
+
   constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {
+    this.role = this.authService.getRole();
+  }
 
   toggleProfileMenu() {
     this.isProfileMenuOpen = !this.isProfileMenuOpen;

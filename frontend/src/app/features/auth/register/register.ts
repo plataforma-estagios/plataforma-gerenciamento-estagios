@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgxMaskDirective } from 'ngx-mask';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
-  imports: [RouterLink, ReactiveFormsModule, NgxMaskDirective],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -17,9 +17,10 @@ export class Register {
   companyForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
+    private readonly fb: FormBuilder,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly toastr: ToastrService,
   ) {
     this.candidateForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -47,11 +48,11 @@ export class Register {
       this.authService.register({ ...this.candidateForm.value, role: 'CANDIDATE' }).subscribe({
         next: (res) => {
           this.router.navigate(['/auth/login']);
-          alert('Registro realizado com sucesso');
+          this.toastr.success('Registro realizado com sucesso');
         },
         error: (err) => {
           console.error('Erro de login', err);
-          alert('Falha na Registro!');
+          this.toastr.error('Falha na Registro!');
         },
       });
     } else {
@@ -60,11 +61,11 @@ export class Register {
       this.authService.register({ ...this.companyForm.value, role: 'COMPANY' }).subscribe({
         next: (res) => {
           this.router.navigate(['/auth/login']);
-          alert('Registro realizado com sucesso');
+          this.toastr.success('Registro realizado com sucesso');
         },
         error: (err) => {
           console.error('Erro de login', err);
-          alert('Falha na Registro!');
+          this.toastr.error('Falha na Registro!');
         },
       });
     }

@@ -1,0 +1,165 @@
+<div class="container">
+  <div class="card-form">
+    <p class="subtitle">Preencha os detalhes para atrair os melhores talentos.</p>
+
+    <form (ngSubmit)="cadastrar()" [formGroup]="jobForm" class="form">
+      <div class="form-section">
+        <label>Título da Vaga *</label>
+        <input
+          class="form__input"
+          type="text"
+          formControlName="titulo"
+          name="titulo"
+          required
+          placeholder="Ex: Estagiário de Desenvolvimento Java"
+        />
+
+        @if (jobForm.get('titulo')?.invalid && jobForm.get('titulo')?.touched) {
+          <div class="form__error">
+            <span>Título é obrigatório</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-section">
+        <label>Área de Conhecimento *</label>
+        <input
+          class="form__input"
+          type="text"
+          formControlName="areaConhecimento"
+          name="areaConhecimento"
+          required
+          placeholder="Ex: Tecnologia da Informação"
+        />
+
+        @if (jobForm.get('areaConhecimento')?.invalid && jobForm.get('areaConhecimento')?.touched) {
+          <div class="form__error">
+            <span>Área de Conhecimento é obrigatória</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-section">
+          <label>Localização *</label>
+          <select class="form__input" formControlName="localizacao" name="localizacao">
+            <option value="PRESENCIAL">Presencial</option>
+            <option value="REMOTO">Remoto</option>
+            <option value="HIBRIDO">Híbrido</option>
+          </select>
+        </div>
+        <div class="form-section">
+          <label>Tipo de Vaga *</label>
+          <select class="form__input" formControlName="tipoVaga" name="tipoVaga">
+            <option value="ESTAGIO">Estágio</option>
+            <option value="EMPREGO">Emprego</option>
+            <option value="TRAINEE">Trainee</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label>Descrição detalhada *</label>
+        <textarea
+          class="form__input"
+          formControlName="descricao"
+          name="descricao"
+          rows="4"
+          required
+          placeholder="Fale sobre a vaga..."
+        ></textarea>
+
+        @if (jobForm.get('descricao')?.invalid && jobForm.get('descricao')?.touched) {
+          <div class="form__error">
+            <span>Descrição é obrigatória</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-section">
+        <label>Requisitos técnicos *</label>
+        <textarea
+          class="form__input"
+          formControlName="requisitos"
+          name="requisitos"
+          rows="3"
+          required
+          placeholder="Ex: Conhecer Spring Boot e Git..."
+        ></textarea>
+
+        @if (jobForm.get('requisitos')?.invalid && jobForm.get('requisitos')?.touched) {
+          <div class="form__error">
+            <span>Requisitos técnicos é obrigatório</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-section">
+          <label>Período e Turno *</label>
+          <select class="form__input" formControlName="periodoTurno" name="periodoTurno">
+            <option value="MANHA">Manhã</option>
+            <option value="TARDE">Tarde</option>
+            <option value="NOITE">Noite</option>
+          </select>
+        </div>
+        <div class="form-section">
+          <label>Benefícios *</label>
+          <input
+            class="form__input"
+            type="text"
+            formControlName="beneficios"
+            name="beneficios"
+            placeholder="Ex: Vale transporte, Vale alimentação, etc."
+          />
+
+          @if (jobForm.get('beneficios')?.invalid && jobForm.get('beneficios')?.touched) {
+            <div class="form__error">
+              <span>Benefícios é obrigatório</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-section">
+          <label>Salário / Bolsa *</label>
+          <input
+            class="form__input"
+            type="number"
+            formControlName="salario"
+            name="salario"
+            placeholder="Ex: R$ 1.500,00"
+          />
+
+          @if (jobForm.get('salario')?.invalid && jobForm.get('salario')?.touched) {
+            <div class="form__error">
+              <span>Salário é obrigatório</span>
+            </div>
+          }
+        </div>
+        <div class="form-section">
+          <label>Prazo para Candidatura *</label>
+          <input
+            class="form__input"
+            type="date"
+            formControlName="prazoCandidatura"
+            name="prazoCandidatura"
+          />
+
+          @if (
+            jobForm.get('prazoCandidatura')?.invalid && jobForm.get('prazoCandidatura')?.touched
+          ) {
+            <div class="form__error">
+              <span>Prazo para Candidatura é obrigatório</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary" [disabled]="!jobForm.valid">Publicar Vaga</button>
+      </div>
+    </form>
+  </div>
+</div>

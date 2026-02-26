@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule, UserCheck, Users } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +18,10 @@ export class Login {
   form: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly toastr: ToastrService,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -33,11 +35,20 @@ export class Login {
     this.authService.login({ ...this.form.value }).subscribe({
       next: (res) => {
         localStorage.setItem('auth_token', res.token);
-        this.router.navigate(['/users/profile']);
+
+        const role = this.authService.getRole()?.toUpperCase();
+
+        if (role === 'COMPANY') {
+          this.router.navigate(['/users/company']);
+        } else if (role === 'CANDIDATE') {
+          this.router.navigate(['/users/candidate']);
+        }
+
+        this.toastr.success('Login realizado com sucesso');
       },
       error: (err) => {
         console.error('Erro de login', err);
-        alert('Falha na autenticação!');
+        this.toastr.error('Falha na autenticação!');
       },
     });
   }

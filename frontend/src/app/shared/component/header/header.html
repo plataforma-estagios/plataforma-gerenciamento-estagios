@@ -10,8 +10,12 @@
     </div>
 
     <div class="header__right">
+
+        @if (role === 'CANDIDATE') {
         <a class="header__link" href="">Vagas</a>
         <a class="header__link" href="">Minhas candidaturas</a>
+        }
+
         <div class="header__profile-container" (click)="toggleProfileMenu()">
             <img class="header__profile-image" src="assets/images/profile-picture.png" alt="Usuário">
             <lucide-icon [name]="ChevronDown"></lucide-icon>

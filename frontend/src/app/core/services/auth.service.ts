@@ -2,6 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
+interface JwtPayload {
+  sub: string;
+  role: string;
+}
+
 interface LoginDTO {
   email: string;
   password: string;
@@ -24,9 +29,9 @@ interface RegisterDTO {
   providedIn: 'root',
 })
 export class AuthService {
-  private TOKEN_KEY = 'auth_token';
+  private readonly TOKEN_KEY = 'auth_token';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   login({ email, password }: LoginDTO) {
     this.http
@@ -87,8 +92,18 @@ export class AuthService {
   getRole() {
     const token = this.getToken();
     if (token) {
-      const decodedToken = jwtDecode(token) as { role: 'candidate' | 'company' };
+      const decodedToken = jwtDecode<JwtPayload>(token);
       return decodedToken.role;
+    }
+
+    return null;
+  }
+
+  getEmail() {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken = jwtDecode<JwtPayload>(token);
+      return decodedToken.sub;
     }
 
     return null;

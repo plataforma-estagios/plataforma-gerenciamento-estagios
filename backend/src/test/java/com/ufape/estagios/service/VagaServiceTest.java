@@ -167,7 +167,8 @@ class VagaServiceTest {
 
         vagaService.desativarVaga(1L);
 
-        assertFalse(vaga.getAtiva());
+        // CORREÇÃO: Usando isAtiva() em vez de getAtiva()
+        assertFalse(vaga.isAtiva()); 
         verify(vagaRepository).save(vaga);
     }
 }

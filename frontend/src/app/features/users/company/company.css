@@ -1,0 +1,104 @@
+.container {
+    padding: var(--space-4);
+}
+
+.company-container {
+    background-color: var(--color-bg-card);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.manage-jobs-container {
+    margin-top: var(--space-6);
+    padding: 0 var(--space-20);
+}
+
+.manage-jobs-container__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.manage-jobs-container__create-button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-default);
+    background-color: var(--color-primary-500);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-inverse);
+}
+
+.manage-jobs-container__empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 250px;
+    margin: 0 auto;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-default);
+    background-color: var(--color-bg-card);
+}
+
+.manage-jobs-container__jobs-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-8);
+}
+
+.manage-jobs-container__jobs-table-header {
+    background-color: var(--color-primary-500);
+    color: var(--color-text-inverse);
+}
+
+.manage-jobs-container__jobs-table-body {
+    background-color: var(--color-bg-card);
+}
+
+.manage-jobs-container__jobs-table-body-row {
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+}
+
+.manage-jobs-container__jobs-table-body-row-cell {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+}
+
+.manage-jobs-container__jobs-table-body-row-cell-buttons {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    align-items: center;
+}
+
+.manage-jobs-container__edit-button {
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-primary-500);
+    color: var(--color-text-inverse);
+    border: 1px solid var(--color-border-default);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-md);
+}
+
+.manage-jobs-container__delete-button {
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-error);
+    color: var(--color-text-inverse);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+}

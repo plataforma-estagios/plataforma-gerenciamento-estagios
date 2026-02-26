@@ -1,0 +1,85 @@
+<main class="container">
+    <div class="company-container">
+        <h1>Painel de controle</h1>
+
+        <div class="manage-jobs-container">
+            <div class="manage-jobs-container__header">
+                <h2>Vagas</h2>
+                <button class="manage-jobs-container__create-button" (click)="setCreateModal()">
+                    <lucide-icon [name]="PlusIcon" />
+                    Criar vaga
+                </button>
+            </div>
+
+            @if (vagas().length === 0) {
+            <div class="manage-jobs-container__empty-state">
+                <lucide-icon [name]="FolderOpenIcon" />
+                <p>Nenhuma vaga encontrada</p>
+            </div>
+            } @else {
+            <table class="manage-jobs-container__jobs-table">
+                <thead class="manage-jobs-container__jobs-table-header">
+                    <tr>
+                        <th>Vaga</th>
+                        <th>Area de conhecimento</th>
+                        <th>Tipo de vaga</th>
+                        <th>Periodo/Turno</th>
+                        <th>Prazo de candidatura</th>
+                        <th>Salário</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="manage-jobs-container__jobs-table-body">
+                    @for (vaga of vagas(); track vaga.id) {
+                    <tr class="manage-jobs-container__jobs-table-body-row">
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.titulo }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.areaConhecimento }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.tipoVaga }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.periodoTurno }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.prazoCandidatura }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            R$ {{ vaga.salario }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            {{ vaga.status }}
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            <div class="manage-jobs-container__jobs-table-body-row-cell-buttons">
+                                <button class="manage-jobs-container__edit-button" (click)="setEditModal(vaga)">
+                                    <lucide-icon [name]="PencilIcon" />
+                                </button>
+                                <button class="manage-jobs-container__delete-button" (click)="setDeleteModal(vaga)">
+                                    <lucide-icon [name]="TrashIcon" />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            }
+        </div>
+    </div>
+</main>
+
+<app-modal [open]="modalOpen" (closeModal)="closeModal()"
+    [title]="modalAction === 'create' ? 'Criar vaga' : modalAction === 'edit' ? 'Editar vaga' : 'Deletar vaga'">
+    @if (modalAction === 'create') {
+    <app-form-job (closeModal)="handleActionResult($event)"></app-form-job>
+    } @else if (modalAction === 'edit') {
+    <app-form-job [vaga]="vaga" (closeModal)="handleActionResult($event)"></app-form-job>
+    } @else if (modalAction === 'delete') {
+    <app-delete-job [vaga]="vaga" (closeModal)="handleActionResult($event)"></app-delete-job>
+    }
+</app-modal>

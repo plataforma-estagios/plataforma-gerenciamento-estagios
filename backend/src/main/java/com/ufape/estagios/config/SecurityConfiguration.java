@@ -36,8 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/vagas/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/vagas/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.DELETE, "/api/vagas/**").hasRole("COMPANY")
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

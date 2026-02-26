@@ -1,0 +1,84 @@
+<div class="jobs-container">
+  <header class="jobs-header">
+    <h2>Vagas Disponíveis</h2>
+  </header>
+
+  <div class="filter-section">
+    <div class="filter-group">
+      <label>Área de Conhecimento</label>
+      <input
+        type="text"
+        [(ngModel)]="filtroArea"
+        (input)="aplicarFiltros()"
+        placeholder="Ex: Dados..."
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Tipo de Vaga</label>
+      <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+        <option value="">Todos</option>
+        <option value="ESTAGIO">Estágio</option>
+        <option value="TRAINEE">Trainee</option>
+        <option value="EMPREGO">Emprego</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Modelo da Vaga</label>
+      <select [(ngModel)]="filtroModelo" (change)="aplicarFiltros()">
+        <option value="">Todos</option>
+        <option value="REMOTO">Remoto</option>
+        <option value="PRESENCIAL">Presencial</option>
+        <option value="HIBRIDO">Híbrido</option>
+      </select>
+    </div>
+
+    <button
+      class="btn-clear"
+      (click)="filtroArea = ''; filtroTipo = ''; filtroModelo = ''; aplicarFiltros()"
+    >
+      Limpar
+    </button>
+  </div>
+  <div class="jobs-grid">
+    @for (vaga of vagasFiltradas; track vaga.id) {
+      @if (vaga.status === 'EM_ABERTO') {
+        <div class="job-card">
+          <div class="job-main">
+            <h3 class="job-title">{{ vaga.titulo }}</h3>
+            <p class="company-name">{{ vaga.empresaEmail }}</p>
+
+            <div class="job-tags">
+              <span class="tag type">{{ vaga.tipoVaga }}</span>
+              <span class="tag loc">📍 {{ vaga.localizacao }}</span>
+              <span class="tag time">⏱️ {{ vaga.periodoTurno }}</span>
+            </div>
+          </div>
+
+          <div class="job-details-grid">
+            <div class="detail-item"><strong>Área:</strong> {{ vaga.areaConhecimento }}</div>
+            <div class="detail-item"><strong>Salário:</strong> R$ {{ vaga.salario }}</div>
+            <div class="detail-item">
+              <strong>Publicada em:</strong> {{ vaga.dataPublicacao | date: 'dd/MM/yyyy' }}
+            </div>
+            <div class="detail-item">
+              <strong>Prazo:</strong> {{ vaga.prazoCandidatura | date: 'dd/MM/yyyy' }}
+            </div>
+          </div>
+
+          <div class="job-description-section">
+            <p><strong>Descrição:</strong> {{ vaga.descricao }}</p>
+            <p><strong>Requisitos:</strong> {{ vaga.requisitos }}</p>
+          </div>
+
+          <div class="job-footer">
+            <button class="btn-apply">Candidatar-se</button>
+          </div>
+        </div>
+      }
+    } @empty {
+      <div class="empty-msg">Nenhuma vaga disponível para candidatura no momento.</div>
+    }
+  </div>
+</div>

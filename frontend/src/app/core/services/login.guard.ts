@@ -7,8 +7,13 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isLoggedIn()) {
-    router.navigate(['/users/profile']);
-    return false;
+    const role = authService.getRole()?.toUpperCase();
+
+    if (role === 'COMPANY' || role === 'ROLE_COMPANY') {
+      return router.createUrlTree(['/users/company']);
+    }
+
+    return router.createUrlTree(['/users/candidate']);
   }
 
   return true;
