@@ -3,6 +3,8 @@ package com.ufape.estagios.model;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,5 +41,6 @@ public class Candidatura {
 	private LocalDateTime dataDaCandidatura;
 	
 	@NotNull(message = "O status é obrigatório")
+	@Enumerated(value = EnumType.STRING)
 	private StatusDaCandidatura status;
 }
