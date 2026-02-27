@@ -15,7 +15,6 @@ import com.ufape.estagios.exception.IdNotFoundException;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.model.StatusDaCandidatura;
 import com.ufape.estagios.model.StatusDaVaga;
-import com.ufape.estagios.model.UserRole;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidaturaRepository;
@@ -55,7 +54,17 @@ public class CandidaturaService {
 	}
 	
 	@Transactional
-	public List<Candidatura> listarCandidaturaDaVaga(Long vagaId){
+	public void atualizarCandidatura(Long id, CandidaturaRequestDTO candidaturaRequest) {
+		Candidatura candidatura = candidaturaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Candidatura"));
+		validarAcessoACandidatura(candidatura);
+		
+		candidatura.setStatus(candidaturaRequest.status());
+		
+		saveCandidatura(candidatura);
+	}
+
+	@Transactional
+	public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
 		Usuario usuario = getUsuarioAutenticado();
 		Vaga vaga = findVagaById(vagaId);
 		
@@ -92,5 +101,15 @@ public class CandidaturaService {
 		if(vaga.getStatus() != StatusDaVaga.EM_ABERTO) {
 			throw new RuntimeException("Vaga não aceita mais candidaturas");
 		}
+	}
+	
+	private void validarAcessoACandidatura(Candidatura candidatura) {
+		Usuario usuario = getUsuarioAutenticado();
+		Usuario usuarioDonoDaVaga = candidatura.getVaga().getEmpresa();
+		
+		if(usuario.getId() != usuarioDonoDaVaga.getId()) {
+			throw new AccessDeniedException("Você não tem permissão para gerenciar essa candidatura");
+		}
+		
 	}
 }
