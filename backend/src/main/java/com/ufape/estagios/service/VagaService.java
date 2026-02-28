@@ -143,6 +143,7 @@ public class VagaService {
         }
 
         vaga.setAtiva(false);
+        vaga.setStatus(StatusDaVaga.FECHADA);
         vagaRepository.save(vaga);
     }
 
