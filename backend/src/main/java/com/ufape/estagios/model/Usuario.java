@@ -49,6 +49,10 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
+    private String nome;
+    private String curso;
+    private String instituicao;
+
     public Usuario(String email, String password, UserRole role) {
         this.email = email;
         this.password = password;

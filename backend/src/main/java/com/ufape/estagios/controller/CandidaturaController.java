@@ -18,6 +18,9 @@ import com.ufape.estagios.dto.CandidaturaResponseDTO;
 import com.ufape.estagios.mapper.CandidaturaMapper;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.service.CandidaturaService;
+import com.ufape.estagios.dto.EstudanteResumoResponseDTO;
+import com.ufape.estagios.dto.EstudanteResponseDTO;
+import com.ufape.estagios.model.Usuario;
 
 @RestController
 @RequestMapping("/api/candidatura")
@@ -57,4 +60,16 @@ public class CandidaturaController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
+
+	@GetMapping("/{candidaturaId}/perfil/resumo")
+	public ResponseEntity<EstudanteResumoResponseDTO> getPerfilResumido(@PathVariable Long candidaturaId) {
+		return ResponseEntity.ok(candidaturaService.getPerfilResumidoDoEstudante(candidaturaId));
+	}
+
+	@GetMapping("/{candidaturaId}/perfil")
+	public ResponseEntity<EstudanteResponseDTO> getPerfilCompleto(@PathVariable Long candidaturaId) {
+		return ResponseEntity.ok(candidaturaService.getPerfilCompletoDoEstudante(candidaturaId));
+	}
 }
+
+

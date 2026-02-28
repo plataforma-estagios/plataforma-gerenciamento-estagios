@@ -55,6 +55,11 @@ public class AuthorizationService implements UserDetailsService {
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerRequest.password());
         Usuario newUser = new Usuario(registerRequest.email(), encryptedPassword, registerRequest.role());
 
+        newUser.setNome(registerRequest.nome());
+        newUser.setCurso(registerRequest.curso());
+        newUser.setInstituicao(registerRequest.instituicao());
+
         this.usuarioRepository.save(newUser);
     }
+
 }
