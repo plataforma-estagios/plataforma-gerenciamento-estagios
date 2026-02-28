@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ChevronDown, LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

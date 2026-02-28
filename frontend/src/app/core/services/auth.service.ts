@@ -42,7 +42,6 @@ export class AuthService {
           localStorage.setItem(this.TOKEN_KEY, res.token);
         },
         error: () => {
-          console.log(email, password);
           console.error('Erro ao autenticar');
         },
       });

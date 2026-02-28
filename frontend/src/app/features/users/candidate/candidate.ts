@@ -47,7 +47,6 @@ export class Candidate implements OnInit {
         );
         this.aplicarFiltros();
         this.cdr.detectChanges();
-        console.log(dados);
       },
       error: (err) => {
         console.error('Erro ao carregar', err);

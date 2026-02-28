@@ -12,8 +12,8 @@
     <div class="header__right">
 
         @if (role === 'CANDIDATE') {
-        <a class="header__link" href="">Vagas</a>
-        <a class="header__link" href="">Minhas candidaturas</a>
+        <a class="header__link" routerLink="/users/candidate">Vagas</a>
+        <a class="header__link" routerLink="/users/candidate/my-applications">Minhas candidaturas</a>
         }
 
         <div class="header__profile-container" (click)="toggleProfileMenu()">
