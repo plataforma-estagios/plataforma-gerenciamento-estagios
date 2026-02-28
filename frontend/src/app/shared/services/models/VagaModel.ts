@@ -1,6 +1,7 @@
 export interface VagaModel {
   id: number;
   titulo: string;
+  nomeEmpresa: string;
   descricao: string;
   requisitos: string;
   areaConhecimento: string;

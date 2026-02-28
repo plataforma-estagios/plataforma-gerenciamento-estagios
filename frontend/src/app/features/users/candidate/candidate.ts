@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../core/services/auth.service';
+import { CandidaturaService } from '../../../shared/services/candidatura.service';
 import { JobsService } from '../../../shared/services/jobs.service';
 import { VagaModel } from '../../../shared/services/models/VagaModel';
 
@@ -15,12 +17,15 @@ import { VagaModel } from '../../../shared/services/models/VagaModel';
 export class Candidate implements OnInit {
   private readonly jobsService = inject(JobsService);
   private readonly authService = inject(AuthService);
+  private readonly candidaturaService = inject(CandidaturaService);
+  private readonly toastr = inject(ToastrService);
 
   role: string | null = '';
   email: string | null = '';
 
   vagas: VagaModel[] = [];
   vagasFiltradas: VagaModel[] = [];
+  candidaturasVagaIds: Set<number> = new Set();
 
   filtroArea: string = '';
   filtroTipo: string = '';
@@ -30,6 +35,7 @@ export class Candidate implements OnInit {
     this.role = this.authService.getRole();
     this.email = this.authService.getEmail();
     this.carregarVagas();
+    this.carregarCandidaturas();
   }
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -45,6 +51,18 @@ export class Candidate implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar', err);
+      },
+    });
+  }
+
+  carregarCandidaturas() {
+    this.candidaturaService.listarMinhasCandidaturas().subscribe({
+      next: (candidaturas) => {
+        this.candidaturasVagaIds = new Set(candidaturas.map((c) => c.vagaId));
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar candidaturas', err);
       },
     });
   }
@@ -65,6 +83,20 @@ export class Candidate implements OnInit {
         vaga.localizacao.toLowerCase().includes(this.filtroModelo.toLowerCase());
 
       return matchArea && matchTipo && matchModelo && vaga.status === 'EM_ABERTO';
+    });
+  }
+
+  candidatar(vagaId: number) {
+    this.candidaturaService.candidatar(vagaId).subscribe({
+      next: () => {
+        this.toastr.success('Candidatura realizada com sucesso!', 'Sucesso');
+        this.candidaturasVagaIds.add(vagaId);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erro ao realizar candidatura.', 'Erro');
+      },
     });
   }
 }

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { VagaModel } from './models/VagaModel';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { VagaModel } from './models/VagaModel';
 })
 export class JobsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://backend-estagios.onrender.com/api/vagas';
+  private readonly apiUrl = `${environment.apiUrl}/api/vagas`;
 
   private getHeaders() {
     const token = globalThis.window === undefined ? null : localStorage.getItem('auth_token');
@@ -25,6 +26,10 @@ export class JobsService {
 
   listar(): Observable<VagaModel[]> {
     return this.http.get<VagaModel[]>(this.apiUrl, this.getHeaders());
+  }
+
+  buscarPorId(id: string): Observable<VagaModel> {
+    return this.http.get<VagaModel>(`${this.apiUrl}/${id}`, this.getHeaders());
   }
 
   criar(vaga: any): Observable<any> {

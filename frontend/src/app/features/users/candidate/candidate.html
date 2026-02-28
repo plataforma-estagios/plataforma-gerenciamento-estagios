@@ -73,7 +73,14 @@
           </div>
 
           <div class="job-footer">
-            <button class="btn-apply">Candidatar-se</button>
+            <button
+              class="btn-apply"
+              (click)="candidatar(vaga.id)"
+              [disabled]="candidaturasVagaIds.has(vaga.id)"
+              [class.applied]="candidaturasVagaIds.has(vaga.id)"
+            >
+              {{ candidaturasVagaIds.has(vaga.id) ? 'Candidatura Enviada' : 'Candidatar-se' }}
+            </button>
           </div>
         </div>
       }
