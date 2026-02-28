@@ -47,7 +47,7 @@ public class VagaController {
 	public ResponseEntity<VagaResponseDTO> buscarVagaPorId(@PathVariable Long id) {
 
 		VagaResponseDTO vagaResponse = vagaService.buscarVagaPorId(id);
-		return ResponseEntity.status(HttpStatus.FOUND).body(vagaResponse);
+		return ResponseEntity.status(HttpStatus.OK).body(vagaResponse);
 
 	}
 
