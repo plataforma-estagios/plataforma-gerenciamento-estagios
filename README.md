@@ -99,3 +99,19 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 #### 
 Evidências execução SonarCloud
 ![1772156748702](image/README/1772156748702.png)
+
+### 🚧 Iteração 5: Candidaturas e Processo Seletivo (Em Andamento)
+
+Nesta etapa, o foco é a implementação do fluxo completo de seleção, permitindo a interação direta entre estudantes e empresas através de candidaturas e agendamentos.
+
+**Histórias de Usuário (H6 a H9):**
+- [x] **H6 – Candidatura a vaga:** Permite que estudantes autenticados se candidatem a vagas ativas, com validação de candidatura única por vaga.
+- [x] **H7 – Acompanhamento de candidatura:** Interface para o estudante visualizar o status das suas candidaturas (Em análise, Entrevista, Aprovado, Recusado).
+- [ ] **H8 – Gerenciamento de Candidaturas (Empresa):** Permite que as empresas visualizem perfis de candidatos e alterem o status das candidaturas recebidas. **(Em desenvolvimento)**
+- [ ] **H9 – Agendamento de entrevista:** Sistema de agendamento com definição de data, hora e formato (online/presencial), incluindo validação de conflitos de horário para o candidato. **(Em desenvolvimento)**
+
+**Qualidade, Testes e Integração:**
+- [ ] **Evolução da Cobertura (JaCoCo):** Expansão da suíte de testes para atingir a meta mínima de **70% de instruções** e **80% de branches** cobertas no Backend.
+- [ ] **Manutenção de Qualidade (SonarCloud):** Garantia de 0 Security Issues, 0 Maintainability Issues e duplicação de código abaixo de 20%.
+- [ ] **Integração Front-Back:** Garantir que todas as novas funcionalidades de candidatura e agendamento estejam comunicando perfeitamente em produção (Render).
+- [ ] **Novo Release:** Publicação da versão estável da Quinta Iteração no GitHub.
