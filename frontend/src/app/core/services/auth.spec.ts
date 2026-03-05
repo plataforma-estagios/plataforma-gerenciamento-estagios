@@ -44,7 +44,7 @@ describe('AuthService', () => {
    
     service.register(FAKE_USER).subscribe();
 
-    const req = httpMock.expectOne('http://localhost:8080/auth/register');
+    const req = httpMock.expectOne('https://backend-estagios.onrender.com/auth/register');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(FAKE_USER);
 
@@ -98,7 +98,7 @@ describe('AuthService', () => {
     
     service.login(loginData).subscribe();
 
-    const reqs = httpMock.match('http://localhost:8080/auth/login');
+    const reqs = httpMock.match('https://backend-estagios.onrender.com/auth/login');
     expect(reqs.length).toBe(2);
 
     for (const req of reqs) {

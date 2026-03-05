@@ -15,70 +15,55 @@ import java.util.List;
 @RequestMapping("/api/vagas")
 public class VagaController {
 
-    @Autowired
-    private VagaService vagaService;
+	@Autowired
+	private VagaService vagaService;
 
-    @PostMapping
-    public ResponseEntity<VagaResponseDTO> cadastrarVaga(@RequestBody @Valid VagaRequestDTO dto) {
-        try {
-            VagaResponseDTO response = vagaService.cadastrarVaga(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-    
-    @GetMapping
-    public ResponseEntity<List<VagaResponseDTO>> listarVagas(
-            @RequestParam(required = false) String area,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String localizacao,
-            @RequestParam(defaultValue = "dataPublicacao") String sortBy
-    ) {
-        
-        List<VagaResponseDTO> vagas = vagaService.listarVagasParaEstudantes(area, tipo, localizacao, sortBy);
-        return ResponseEntity.ok(vagas);
-    }
+	@PostMapping
+	public ResponseEntity<VagaResponseDTO> cadastrarVaga(@RequestBody @Valid VagaRequestDTO dto) {
 
-    @GetMapping("/minhas-vagas")
-    public ResponseEntity<List<VagaResponseDTO>> listarMinhasVagas() {
-        try {
-            List<VagaResponseDTO> vagas = vagaService.listarMinhasVagas();
-            return ResponseEntity.ok(vagas);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+		VagaResponseDTO response = vagaService.cadastrarVaga(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VagaResponseDTO> buscarVagaPorId(@PathVariable Long id) {
-        try {
-            VagaResponseDTO vaga = vagaService.buscarVagaPorId(id);
-            return ResponseEntity.ok(vaga);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<VagaResponseDTO> atualizarVaga(
-            @PathVariable Long id,
-            @RequestBody @Valid VagaRequestDTO dto) {
-        try {
-            VagaResponseDTO response = vagaService.atualizarVaga(id, dto);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+	@GetMapping
+	public ResponseEntity<List<VagaResponseDTO>> listarVagas(@RequestParam(required = false) String area,
+			@RequestParam(required = false) String tipo, @RequestParam(required = false) String localizacao,
+			@RequestParam(defaultValue = "dataPublicacao") String sortBy) {
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> desativarVaga(@PathVariable Long id) {
-        try {
-            vagaService.desativarVaga(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+		List<VagaResponseDTO> vagasResponse = vagaService.listarVagasParaEstudantes(area, tipo, localizacao, sortBy);
+		return ResponseEntity.ok(vagasResponse);
+	}
+
+	@GetMapping("/minhas-vagas")
+	public ResponseEntity<List<VagaResponseDTO>> listarMinhasVagas() {
+
+		List<VagaResponseDTO> vagasResponse = vagaService.listarMinhasVagas();
+		return ResponseEntity.ok(vagasResponse);
+
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<VagaResponseDTO> buscarVagaPorId(@PathVariable Long id) {
+
+		VagaResponseDTO vagaResponse = vagaService.buscarVagaPorId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(vagaResponse);
+
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<VagaResponseDTO> atualizarVaga(@PathVariable Long id,
+			@RequestBody @Valid VagaRequestDTO dto) {
+
+		VagaResponseDTO response = vagaService.atualizarVaga(id, dto);
+		return ResponseEntity.ok(response);
+
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> desativarVaga(@PathVariable Long id) {
+		vagaService.desativarVaga(id);
+		return ResponseEntity.noContent().build();
+
+	}
 }

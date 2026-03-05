@@ -1,0 +1,9 @@
+cat << 'EOF' > .dockerignore
+target/
+.git/
+.mvn/wrapper/maven-wrapper.jar
+!mvnw
+!.mvn/wrapper/maven-wrapper.properties
+Dockerfile
+.dockerignore
+EOF

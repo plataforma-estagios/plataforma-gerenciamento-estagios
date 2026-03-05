@@ -2,6 +2,8 @@ package com.ufape.estagios.service;
 
 import com.ufape.estagios.dto.VagaRequestDTO;
 import com.ufape.estagios.dto.VagaResponseDTO;
+import com.ufape.estagios.exception.AccessDeniedException;
+import com.ufape.estagios.exception.IdNotFoundException;
 import com.ufape.estagios.mapper.VagaMapper;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.UserRole;
@@ -34,13 +36,13 @@ public class VagaService {
         Usuario empresa = getUsuarioAutenticado();
 
         if (empresa.getRole() != UserRole.COMPANY) {
-            throw new RuntimeException("Apenas empresas podem cadastrar vagas");
+            throw new AccessDeniedException("Only companies can create jobs");
         }
 
         Vaga vaga = VagaMapper.toEntity(dto, empresa);
         vaga.setStatus(StatusDaVaga.EM_ABERTO);
         Vaga vagaSalva = vagaRepository.save(vaga);
-        return VagaResponseDTO.fromEntity(vagaSalva);
+        return VagaMapper.fromEntity(vagaSalva);
     }
 
     public List<VagaResponseDTO> listarVagasParaEstudantes(String area, String tipo, String local, String sortBy) {
@@ -82,14 +84,14 @@ public class VagaService {
 
         return vagaRepository.findAll(spec, sort)
                 .stream()
-                .map(VagaResponseDTO::fromEntity)
+                .map(VagaMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public List<VagaResponseDTO> listarVagasAtivas() {
         return vagaRepository.findByAtivaTrue()
                 .stream()
-                .map(VagaResponseDTO::fromEntity)
+                .map(VagaMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -97,20 +99,20 @@ public class VagaService {
         Usuario empresa = getUsuarioAutenticado();
 
         if (empresa.getRole() != UserRole.COMPANY) {
-            throw new RuntimeException("Apenas empresas podem listar suas vagas");
+            throw new AccessDeniedException("Only companies can list yours jobs");
         }
 
         return vagaRepository.findByEmpresa(empresa)
                 .stream()
-                .map(VagaResponseDTO::fromEntity)
+                .map(VagaMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public VagaResponseDTO buscarVagaPorId(Long id) {
         Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vaga não encontrada"));
+                .orElseThrow(() -> new IdNotFoundException("Job"));
 
-        return VagaResponseDTO.fromEntity(vaga);
+        return VagaMapper.fromEntity(vaga);
     }
 
     @Transactional
@@ -118,15 +120,15 @@ public class VagaService {
         Usuario empresa = getUsuarioAutenticado();
 
         Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vaga não encontrada"));
+                .orElseThrow(() -> new IdNotFoundException("Job"));
 
         if (!vaga.getEmpresa().getId().equals(empresa.getId())) {
-            throw new RuntimeException("Você não tem permissão para editar esta vaga");
+            throw new AccessDeniedException("You dont have permission to update this job");
         }
 
         vaga = VagaMapper.updateVaga(vaga, dto);
         Vaga vagaAtualizada = vagaRepository.save(vaga);
-        return VagaResponseDTO.fromEntity(vagaAtualizada);
+        return VagaMapper.fromEntity(vagaAtualizada);
     }
 
     @Transactional
@@ -134,13 +136,14 @@ public class VagaService {
         Usuario empresa = getUsuarioAutenticado();
 
         Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vaga não encontrada"));
+                .orElseThrow(() -> new IdNotFoundException("Job"));
 
         if (!vaga.getEmpresa().getId().equals(empresa.getId())) {
-            throw new RuntimeException("Você não tem permissão para desativar esta vaga");
+            throw new AccessDeniedException("You dont have permission to update this job");
         }
 
         vaga.setAtiva(false);
+        vaga.setStatus(StatusDaVaga.FECHADA);
         vagaRepository.save(vaga);
     }
 

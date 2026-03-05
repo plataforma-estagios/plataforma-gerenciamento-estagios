@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
 
 interface JwtPayload {
   sub: string;
@@ -35,17 +36,16 @@ export class AuthService {
 
   login({ email, password }: LoginDTO) {
     this.http
-      .post<{ token: string }>('http://localhost:8080/auth/login', { email, password })
+      .post<{ token: string }>(`${environment.apiUrl}/auth/login`, { email, password })
       .subscribe({
         next: (res) => {
           localStorage.setItem(this.TOKEN_KEY, res.token);
         },
         error: () => {
-          console.log(email, password);
           console.error('Erro ao autenticar');
         },
       });
-    return this.http.post<{ token: string }>('http://localhost:8080/auth/login', {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/login`, {
       email,
       password,
     });
@@ -63,7 +63,7 @@ export class AuthService {
     //sector,
     role,
   }: RegisterDTO) {
-    return this.http.post('http://localhost:8080/auth/register', {
+    return this.http.post(`${environment.apiUrl}/auth/register`, {
       // name,
       email,
       password,

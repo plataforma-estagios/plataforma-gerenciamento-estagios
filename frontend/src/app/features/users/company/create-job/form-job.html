@@ -145,13 +145,19 @@
             type="date"
             formControlName="prazoCandidatura"
             name="prazoCandidatura"
+            [min]="minDate"
           />
 
           @if (
             jobForm.get('prazoCandidatura')?.invalid && jobForm.get('prazoCandidatura')?.touched
           ) {
             <div class="form__error">
-              <span>Prazo para Candidatura é obrigatório</span>
+              @if (jobForm.get('prazoCandidatura')?.hasError('required')) {
+                <span>Prazo para Candidatura é obrigatório</span>
+              }
+              @if (jobForm.get('prazoCandidatura')?.hasError('pastDate')) {
+                <span>A data não pode ser anterior a hoje</span>
+              }
             </div>
           }
         </div>

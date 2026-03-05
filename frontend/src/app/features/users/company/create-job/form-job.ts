@@ -9,15 +9,36 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { JobsService } from '../../../../shared/services/jobs.service';
 import { VagaModel } from '../../../../shared/services/models/VagaModel';
+
+function futureOrPresentValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayString = `${year}-${month}-${day}`;
+
+    if (value < todayString) {
+      return { pastDate: true };
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-form-job',
@@ -36,6 +57,14 @@ export class FormJob implements OnChanges {
 
   @Output() closeModal = new EventEmitter<boolean>();
 
+  get minDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   constructor(private readonly fb: FormBuilder) {
     this.jobForm = this.fb.group({
       titulo: [this.vaga?.titulo ?? '', [Validators.required]],
@@ -44,7 +73,7 @@ export class FormJob implements OnChanges {
       areaConhecimento: [this.vaga?.areaConhecimento ?? '', [Validators.required]],
       localizacao: [this.vaga?.localizacao ?? 'PRESENCIAL', [Validators.required]],
       periodoTurno: [this.vaga?.periodoTurno ?? 'MANHA', [Validators.required]],
-      prazoCandidatura: [this.vaga?.prazoCandidatura ?? '', [Validators.required]],
+      prazoCandidatura: [this.vaga?.prazoCandidatura ?? '', [Validators.required, futureOrPresentValidator()]],
       beneficios: [this.vaga?.beneficios ?? '', [Validators.required]],
       salario: [this.vaga?.salario ?? 0, [Validators.required, Validators.min(0)]],
       tipoVaga: [this.vaga?.tipoVaga ?? 'ESTAGIO', [Validators.required]],
@@ -100,8 +129,8 @@ export class FormJob implements OnChanges {
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
-          this.toastr.error('Erro ao atualizar. Verifique se você está logado como EMPRESA.');
-          this.closeModal.emit(false);
+          const errorMessage = typeof err.error === 'string' ? err.error : 'Erro ao atualizar. Verifique os dados.';
+          this.toastr.error(errorMessage);
         },
       });
     } else {
@@ -112,8 +141,8 @@ export class FormJob implements OnChanges {
         },
         error: (err) => {
           console.error('Erro ao cadastrar:', err);
-          this.toastr.error('Erro ao cadastrar. Verifique se você está logado como EMPRESA.');
-          this.closeModal.emit(false);
+          const errorMessage = typeof err.error === 'string' ? err.error : 'Erro ao cadastrar. Verifique os dados.';
+          this.toastr.error(errorMessage);
         },
       });
     }

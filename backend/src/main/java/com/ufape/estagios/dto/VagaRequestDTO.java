@@ -2,6 +2,7 @@ package com.ufape.estagios.dto;
 
 import com.ufape.estagios.model.Localizacao;
 import com.ufape.estagios.model.TipoVaga;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,6 +30,7 @@ public record VagaRequestDTO(
 
         String periodoTurno,
 
+        @FutureOrPresent(message = "O prazo de candidatura deve ser uma data futura ou presente")
         LocalDate prazoCandidatura,
 
         String beneficios,
