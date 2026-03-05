@@ -1,5 +1,6 @@
 package com.ufape.estagios.service;
 
+import com.ufape.estagios.dto.CandidaturaResumoResponseDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidaturaRepository;
 import com.ufape.estagios.repository.VagaRepository;
+import com.ufape.estagios.dto.EstudanteResumoResponseDTO;
+import com.ufape.estagios.dto.EstudanteResponseDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -58,6 +61,12 @@ public class CandidaturaService {
 	public void atualizarCandidatura(Long id, CandidaturaRequestDTO candidaturaRequest) {
 		Candidatura candidatura = candidaturaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Candidatura"));
 		validarAcessoACandidatura(candidatura);
+
+		if(candidatura.getStatus() == StatusDaCandidatura.APROVADA ||
+				candidatura.getStatus() == StatusDaCandidatura.REPROVADA) {
+
+			throw new RuntimeException("Não é possível alterar uma candidatura finalizada");
+		}
 		
 		candidatura.setStatus(candidaturaRequest.status());
 		
@@ -121,5 +130,37 @@ public class CandidaturaService {
 			throw new AccessDeniedException("Você não tem permissão para gerenciar essa candidatura");
 		}
 		
+	}
+
+	public List<CandidaturaResumoResponseDTO> listarResumoCandidaturasDaVaga(Long vagaId) {
+
+		List<Candidatura> candidaturas = listarCandidaturasDaVaga(vagaId);
+
+		return candidaturas.stream()
+				.map(c -> new CandidaturaResumoResponseDTO(
+						c.getId(),
+						c.getStatus(),
+						new EstudanteResumoResponseDTO(
+								c.getUsuario().getId(),
+								c.getUsuario().getNome(),
+								c.getUsuario().getCurso(),
+								c.getUsuario().getInstituicao()
+						)
+				))
+				.toList();
+	}
+
+	public EstudanteResumoResponseDTO getPerfilResumidoDoEstudante(Long candidaturaId) {
+		Candidatura candidatura = candidaturaRepository.findById(candidaturaId)
+				.orElseThrow(() -> new IdNotFoundException("Candidatura não encontrada"));
+		Usuario estudante = candidatura.getUsuario();
+		return new EstudanteResumoResponseDTO(estudante.getId(), estudante.getNome(), estudante.getCurso(), estudante.getInstituicao());
+	}
+
+	public EstudanteResponseDTO getPerfilCompletoDoEstudante(Long candidaturaId) {
+		Candidatura candidatura = candidaturaRepository.findById(candidaturaId)
+				.orElseThrow(() -> new IdNotFoundException("Candidatura não encontrada"));
+		Usuario estudante = candidatura.getUsuario();
+		return new EstudanteResponseDTO(estudante.getId(), estudante.getNome(), estudante.getEmail(), estudante.getCurso(), estudante.getInstituicao());
 	}
 }

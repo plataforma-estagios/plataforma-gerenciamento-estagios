@@ -50,8 +50,8 @@ class VagaServiceTest {
 
     @BeforeEach
     void setUp() {
-        empresa = new Usuario(1L, "empresa@test.com", "password", UserRole.COMPANY);
-        candidato = new Usuario(2L, "candidato@test.com", "password", UserRole.CANDIDATE);
+        empresa = new Usuario(1L, "empresa@test.com", "password", UserRole.COMPANY, null, null, null);
+        candidato = new Usuario(2L, "candidato@test.com", "password", UserRole.CANDIDATE, null, null, null);
 
         vagaRequestDTO = new VagaRequestDTO(
                 "Desenvolvedor Java",
