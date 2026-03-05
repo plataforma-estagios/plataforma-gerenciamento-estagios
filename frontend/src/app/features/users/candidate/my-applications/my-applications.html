@@ -1,0 +1,127 @@
+<div class="container">
+    <h1 class="title">Minhas Candidaturas</h1>
+
+    @if (candidaturas.length === 0) {
+        <div class="empty-state">
+            <p>Você ainda não se candidatou a nenhuma vaga.</p>
+        </div>
+    } @else {
+        <table class="applications-table">
+            <thead>
+                <tr>
+                    <th>Vaga</th>
+                    <th>Empresa</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (candidatura of candidaturas; track candidatura.id) {
+                    <tr>
+                        <td>{{ candidatura.nomeDaVaga }}</td>
+                        <td>{{ candidatura.nomeEmpresa }}</td>
+                        <td>{{ formatDate(candidatura.data) }}</td>
+                        <td>
+                            <span class="status-badge" [ngClass]="getStatusClass(candidatura.status)">
+                                {{ getStatusLabel(candidatura.status) }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-button" (click)="viewDetails(candidatura)" title="Ver detalhes">
+                                <lucide-icon [name]="EyeIcon" [size]="20"></lucide-icon>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<app-modal [open]="modalOpen" (closeModal)="closeModal()" [title]="selectedJob?.titulo || 'Detalhes da Vaga'">
+    @if (selectedJob) {
+        <div class="job-details-container">
+            <div class="job-meta-grid">
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="BuildingIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Empresa</span>
+                        <span class="meta-value">{{ selectedJob.nomeEmpresa }}</span>
+                    </div>
+                </div>
+
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="MapPinIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Localização</span>
+                        <span class="meta-value">{{ selectedJob.localizacao }}</span>
+                    </div>
+                </div>
+
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="BriefcaseIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Tipo</span>
+                        <span class="meta-value">{{ selectedJob.tipoVaga }}</span>
+                    </div>
+                </div>
+
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="DollarSignIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Salário/Bolsa</span>
+                        <span class="meta-value">R$ {{ selectedJob.salario }}</span>
+                    </div>
+                </div>
+
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="ClockIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Período</span>
+                        <span class="meta-value">{{ selectedJob.periodoTurno }}</span>
+                    </div>
+                </div>
+
+                <div class="meta-item">
+                    <div class="meta-icon-wrapper">
+                        <lucide-icon [name]="CalendarIcon" [size]="20"></lucide-icon>
+                    </div>
+                    <div class="meta-content">
+                        <span class="meta-label">Publicado em</span>
+                        <span class="meta-value">{{ formatDate(selectedJob.dataPublicacao) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="job-sections">
+                <div class="job-section">
+                    <h3>Descrição</h3>
+                    <p>{{ selectedJob.descricao }}</p>
+                </div>
+
+                <div class="job-section">
+                    <h3>Requisitos</h3>
+                    <p>{{ selectedJob.requisitos }}</p>
+                </div>
+
+                <div class="job-section">
+                    <h3>Benefícios</h3>
+                    <p>{{ selectedJob.beneficios }}</p>
+                </div>
+            </div>
+        </div>
+    }
+</app-modal>

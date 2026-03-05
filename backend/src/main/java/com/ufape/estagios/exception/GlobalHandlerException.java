@@ -28,4 +28,9 @@ public class GlobalHandlerException {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
+	@ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+	public ResponseEntity<String> handlerMethodArgumentNotValidException(org.springframework.web.bind.MethodArgumentNotValidException ex){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getBindingResult().getFieldError().getDefaultMessage());
+	}
+	
 }

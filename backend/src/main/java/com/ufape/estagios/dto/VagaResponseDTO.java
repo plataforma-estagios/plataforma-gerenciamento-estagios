@@ -1,11 +1,10 @@
 package com.ufape.estagios.dto;
 
+import java.time.LocalDate;
+
 import com.ufape.estagios.model.Localizacao;
 import com.ufape.estagios.model.StatusDaVaga;
 import com.ufape.estagios.model.TipoVaga;
-import com.ufape.estagios.model.Vaga;
-
-import java.time.LocalDate;
 
 public record VagaResponseDTO(
         Long id,
