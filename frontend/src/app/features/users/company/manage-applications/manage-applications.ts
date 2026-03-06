@@ -19,20 +19,20 @@ import { DatePipe, CommonModule } from '@angular/common';
   styleUrl: './manage-applications.css',
 })
 export class ManageApplications implements OnInit {
-  private route = inject(ActivatedRoute);
-  private candidaturaService = inject(CandidaturaService);
-  private entrevistaService = inject(EntrevistaService);
-  private fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly candidaturaService = inject(CandidaturaService);
+  private readonly entrevistaService = inject(EntrevistaService);
+  private readonly fb = inject(FormBuilder);
 
   vagaId = signal<number>(0);
   candidaturas = signal<CandidaturaModel[]>([]);
   selectedCandidatura = signal<CandidaturaModel | null>(null);
-  
+
   profileModalOpen = false;
   viewingFullProfile = false;
   studentSummary = signal<EstudanteResumoModel | null>(null);
   studentFullProfile = signal<EstudanteModel | null>(null);
-  
+
   interviewModalOpen = false;
   interviewForm: FormGroup;
   FormatoEntrevista = FormatoEntrevista;
@@ -78,11 +78,11 @@ export class ManageApplications implements OnInit {
       error: (err) => console.error('Error fetching summary', err)
     });
   }
-  
+
   loadFullProfile() {
     const candidatura = this.selectedCandidatura();
     if (!candidatura) return;
-    
+
     this.candidaturaService.getPerfilCompleto(candidatura.id).subscribe({
       next: (data) => {
         this.studentFullProfile.set(data);
@@ -104,7 +104,7 @@ export class ManageApplications implements OnInit {
     if (confirm(`Tem certeza que deseja alterar o status para ${status}?`)) {
       this.candidaturaService.atualizarStatus(candidatura.id, status).subscribe({
         next: () => {
-          this.loadCandidaturas(); 
+          this.loadCandidaturas();
         },
         error: (err) => console.error('Error updating status', err)
       });

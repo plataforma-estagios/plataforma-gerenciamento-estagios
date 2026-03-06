@@ -16,7 +16,7 @@
         <a class="header__link" routerLink="/users/candidate/my-applications">Minhas candidaturas</a>
         }
 
-        <div class="header__profile-container" (click)="toggleProfileMenu()">
+        <div class="header__profile-container" (keyDown.enter)="toggleProfileMenu()" (click)="toggleProfileMenu()">
             <img class="header__profile-image" src="assets/images/profile-picture.png" alt="Usuário">
             <lucide-icon [name]="ChevronDown"></lucide-icon>
 

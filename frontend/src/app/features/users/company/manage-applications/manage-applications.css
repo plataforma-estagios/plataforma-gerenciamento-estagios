@@ -6,7 +6,7 @@
     background: #fff;
     border-radius: 8px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .manage-jobs-container__header {
@@ -18,7 +18,7 @@
 
 .manage-jobs-container__create-button {
     background-color: #007bff;
-    color: white;
+    color: black;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
@@ -58,7 +58,8 @@
     gap: 0.5rem;
 }
 
-.action-button, .status-button {
+.action-button,
+.status-button {
     background: none;
     border: none;
     cursor: pointer;
@@ -69,19 +70,46 @@
     justify-content: center;
 }
 
-.action-button:hover, .status-button:hover {
+.action-button:hover,
+.status-button:hover {
     background-color: #f0f0f0;
 }
 
-.status-button.approve { color: #28a745; }
-.status-button.reject { color: #dc3545; }
-.status-button.interview { color: #ffc107; }
+.status-button.approve {
+    color: #28a745;
+}
 
-.status-approved { color: #28a745; font-weight: bold; }
-.status-rejected { color: #dc3545; font-weight: bold; }
-.status-interview { color: #ffc107; font-weight: bold; }
-.status-analysis { color: #17a2b8; font-weight: bold; }
-.status-default { color: #6c757d; }
+.status-button.reject {
+    color: #dc3545;
+}
+
+.status-button.interview {
+    color: #ffc107;
+}
+
+.status-approved {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-interview {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-analysis {
+    color: #17a2b8;
+    font-weight: bold;
+}
+
+.status-default {
+    color: #6c757d;
+}
 
 .profile-modal-content {
     padding: 1rem;
@@ -92,14 +120,15 @@
     margin-bottom: 1rem;
 }
 
-.profile-summary p, .profile-full p {
+.profile-summary p,
+.profile-full p {
     margin: 0.5rem 0;
 }
 
 .btn-full-profile {
     margin-top: 1rem;
     background-color: #007bff;
-    color: white;
+    color: black;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
@@ -140,7 +169,7 @@
 .form-control:focus {
     border-color: #007bff;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .form-actions {
@@ -162,7 +191,7 @@
 
 .btn-submit {
     background-color: #007bff;
-    color: white;
+    color: black;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;

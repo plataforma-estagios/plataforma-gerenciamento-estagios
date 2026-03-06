@@ -12,8 +12,8 @@ import { JobsService } from '../jobs.service';
   styleUrls: ['./jobs-list.css']
 })
 export class JobsListComponent implements OnInit {
-  private jobsService = inject(JobsService);
-  
+  private readonly jobsService = inject(JobsService);
+
   vagas: any[] = [];
   erro: string = '';
 
@@ -28,9 +28,9 @@ export class JobsListComponent implements OnInit {
 
   carregarVagas() {
     this.jobsService.listar(
-      this.filtroArea, 
-      this.filtroTipo, 
-      this.filtroLocal, 
+      this.filtroArea,
+      this.filtroTipo,
+      this.filtroLocal,
       this.ordenacao
     ).subscribe({
       next: (dados) => {

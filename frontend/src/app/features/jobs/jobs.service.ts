@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class JobsService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/vagas';
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api/vagas';
 
   private getHeaders() {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const token = typeof globalThis.window === 'undefined' ? null : localStorage.getItem('token');
     return {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
@@ -26,9 +26,9 @@ export class JobsService {
     if (localizacao) params = params.set('localizacao', localizacao);
     if (sortBy) params = params.set('sortBy', sortBy);
 
-    return this.http.get<any[]>(this.apiUrl, { 
-      ...this.getHeaders(), 
-      params 
+    return this.http.get<any[]>(this.apiUrl, {
+      ...this.getHeaders(),
+      params
     });
   }
 

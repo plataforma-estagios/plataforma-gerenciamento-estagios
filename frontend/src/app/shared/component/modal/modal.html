@@ -1,6 +1,6 @@
 @if (open) {
-<div class="modal-backdrop" (click)="onBackdropClick()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+<div class="modal-backdrop" (keyDown.enter)="onBackdropClick()" (click)="onBackdropClick()">
+    <div class="modal-content" (keyDown.enter)="$event.stopPropagation()" (click)="$event.stopPropagation()">
         <div class="modal-header">
             <h2 class="modal-title">
                 {{ title }}

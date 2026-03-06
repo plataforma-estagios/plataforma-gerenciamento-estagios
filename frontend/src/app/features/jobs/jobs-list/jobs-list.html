@@ -6,40 +6,42 @@
 
   <div class="filters-bar">
     <div class="filter-group">
-      <label>Área de Conhecimento</label>
-      <input 
-        type="text" 
-        [(ngModel)]="filtroArea" 
-        (input)="aplicarFiltros()" 
-        placeholder="Ex: TI, Administração...">
+      <label>
+        Área de Conhecimento
+
+        <input type="text" [(ngModel)]="filtroArea" (input)="aplicarFiltros()" placeholder="Ex: TI, Administração...">
+      </label>
     </div>
 
     <div class="filter-group">
-      <label>Tipo</label>
-      <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
-        <option value="">Todos</option>
-        <option value="ESTAGIO">Estágio</option>
-        <option value="TRAINEE">Trainee</option>
-        <option value="EMPREGO">Emprego</option>
-      </select>
+      <label>Tipo
+        <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="ESTAGIO">Estágio</option>
+          <option value="TRAINEE">Trainee</option>
+          <option value="EMPREGO">Emprego</option>
+        </select>
+      </label>
     </div>
 
     <div class="filter-group">
-      <label>Localização</label>
-      <select [(ngModel)]="filtroLocal" (change)="aplicarFiltros()">
-        <option value="">Todas</option>
-        <option value="PRESENCIAL">Presencial</option>
-        <option value="REMOTO">Remoto</option>
-        <option value="HIBRIDO">Híbrido</option>
-      </select>
+      <label>Localização
+        <select [(ngModel)]="filtroLocal" (change)="aplicarFiltros()">
+          <option value="">Todas</option>
+          <option value="PRESENCIAL">Presencial</option>
+          <option value="REMOTO">Remoto</option>
+          <option value="HIBRIDO">Híbrido</option>
+        </select>
+      </label>
     </div>
 
     <div class="filter-group">
-      <label>Ordenar por</label>
-      <select [(ngModel)]="ordenacao" (change)="aplicarFiltros()">
-        <option value="dataPublicacao">Mais Recentes</option>
-        <option value="prazoCandidatura">Prazo de Inscrição</option>
-      </select>
+      <label>Ordenar por
+        <select [(ngModel)]="ordenacao" (change)="aplicarFiltros()">
+          <option value="dataPublicacao">Mais Recentes</option>
+          <option value="prazoCandidatura">Prazo de Inscrição</option>
+        </select>
+      </label>
     </div>
   </div>
 
@@ -51,9 +53,9 @@
         <h3>{{ vaga.titulo }}</h3>
         <span class="company-name">🏢 {{ vaga.nomeEmpresa }}</span>
       </div>
-      
+
       <p class="description">{{ vaga.descricao }}</p>
-      
+
       <div class="details">
         <p><strong>Requisitos:</strong> {{ vaga.requisitos }}</p>
         <p><strong>Área:</strong> {{ vaga.areaConhecimento }}</p>

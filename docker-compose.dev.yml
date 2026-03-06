@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: plataforma_estagios
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: 123456
     ports:
       - "5432:5432"
     volumes:
