@@ -48,10 +48,10 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
-
+    
     private String nome;
-    private String curso;
     private String instituicao;
+    private String curso;
 
     public Usuario(String email, String password, UserRole role) {
         this.email = email;
