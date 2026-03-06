@@ -64,7 +64,6 @@
     color: var(--color-text-primary);
 }
 
-/* GRID E CARDS */
 .grid { 
     display: grid; 
     gap: var(--space-6); 

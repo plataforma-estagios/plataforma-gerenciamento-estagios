@@ -83,7 +83,6 @@
     color: var(--color-text-secondary);
 }
 
-/* Modal Job Details Styles */
 .job-details-container {
     display: flex;
     flex-direction: column;
@@ -176,4 +175,46 @@
     .job-meta-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.interview-btn {
+    color: var(--color-primary-600);
+}
+
+.interview-btn:hover {
+    color: var(--color-primary-800);
+    background-color: var(--color-primary-50);
+    border-radius: var(--radius-sm);
+}
+
+.interview-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.detail-item strong {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.detail-item p {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-default);
 }
