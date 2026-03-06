@@ -145,7 +145,8 @@ export class ManageApplications implements OnInit {
       },
       error: (err) => {
         console.error('Error scheduling interview', err);
-        alert('Erro ao agendar entrevista: ' + (err.error?.message || 'Erro desconhecido'));
+        const errorMessage = typeof err.error === 'string' ? err.error : (err.error?.message || 'Erro desconhecido');
+        alert('Erro ao agendar entrevista: ' + errorMessage);
       }
     });
   }

@@ -33,4 +33,9 @@ public class GlobalHandlerException {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getBindingResult().getFieldError().getDefaultMessage());
 	}
 	
+	@ExceptionHandler(ConflictException.class)
+	public ResponseEntity<String> handlerConflictException(ConflictException ex){
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+	}
+	
 }
