@@ -76,6 +76,36 @@ public class EntrevistaService {
         );
     }
 
+    public EntrevistaResponseDTO buscarEntrevistaPorCandidatura(Long candidaturaId) {
+        Usuario usuario = getUsuarioAutenticado();
+        Entrevista entrevista = entrevistaRepository.findByCandidaturaId(candidaturaId)
+                .orElseThrow(() -> new IdNotFoundException("Entrevista"));
+        
+        Candidatura candidatura = entrevista.getCandidatura();
+        
+        if (usuario.getRole() == UserRole.COMPANY) {
+            if (!candidatura.getVaga().getEmpresa().getId().equals(usuario.getId())) {
+                throw new AccessDeniedException("Você não tem permissão para visualizar esta entrevista.");
+            }
+        } else if (usuario.getRole() == UserRole.CANDIDATE) {
+            if (!candidatura.getUsuario().getId().equals(usuario.getId())) {
+                throw new AccessDeniedException("Você não tem permissão para visualizar esta entrevista.");
+            }
+        } else {
+            
+        }
+        
+        return new EntrevistaResponseDTO(
+                entrevista.getId(),
+                candidatura.getId(),
+                candidatura.getUsuario().getNome(),
+                candidatura.getVaga().getTitulo(),
+                entrevista.getDataHora(),
+                entrevista.getFormato(),
+                entrevista.getDetalhes()
+        );
+    }
+
     private Usuario getUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Usuario) authentication.getPrincipal();

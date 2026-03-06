@@ -11,5 +11,7 @@ import com.ufape.estagios.model.Entrevista;
 public interface EntrevistaRepository extends JpaRepository<Entrevista, Long> {
 
         boolean existsByCandidaturaUsuarioIdAndDataHora(Long usuarioId, LocalDateTime dataHora);
+        
+        java.util.Optional<Entrevista> findByCandidaturaId(Long candidaturaId);
     
 }
