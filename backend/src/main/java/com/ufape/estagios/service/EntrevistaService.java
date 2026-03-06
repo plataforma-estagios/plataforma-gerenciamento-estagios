@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ufape.estagios.dto.AgendamentoRequestDTO;
 import com.ufape.estagios.dto.EntrevistaResponseDTO;
 import com.ufape.estagios.exception.AccessDeniedException;
+import com.ufape.estagios.exception.ConflictException;
 import com.ufape.estagios.exception.IdNotFoundException;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.model.Entrevista;
@@ -52,7 +53,14 @@ public class EntrevistaService {
                 candidatura.getUsuario().getId(), dto.dataHora());
 
         if (temConflito) {
-            throw new RuntimeException("O estudante já possui uma entrevista agendada para este horário exato.");
+            throw new ConflictException("O estudante já possui uma entrevista agendada para este horário exato.");
+        }
+
+        boolean conflitoEmpresa = entrevistaRepository.existsByCandidaturaVagaEmpresaIdAndDataHora(
+                candidatura.getVaga().getEmpresa().getId(), dto.dataHora());
+
+        if (conflitoEmpresa) {
+            throw new ConflictException("Sua empresa já possui uma entrevista agendada para este horário.");
         }
 
         candidatura.setStatus(StatusDaCandidatura.ENTREVISTA);
