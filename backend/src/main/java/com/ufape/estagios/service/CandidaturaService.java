@@ -14,6 +14,7 @@ import com.ufape.estagios.dto.CandidaturaResumoResponseDTO;
 import com.ufape.estagios.dto.EstudanteResponseDTO;
 import com.ufape.estagios.dto.EstudanteResumoResponseDTO;
 import com.ufape.estagios.exception.AccessDeniedException;
+import com.ufape.estagios.exception.ConflictException;
 import com.ufape.estagios.exception.IdNotFoundException;
 import com.ufape.estagios.model.Candidato;
 import com.ufape.estagios.model.Candidatura;
@@ -171,7 +172,7 @@ public class CandidaturaService {
 		
 		Vaga vaga = candidatura.getVaga();
 		if(vaga.getStatus() != StatusDaVaga.EM_ABERTO) {
-			throw new RuntimeException("Vaga não aceita mais candidaturas");
+			throw new ConflictException("Vaga não aceita mais candidaturas");
 		}
 	}
 	
