@@ -33,6 +33,10 @@ public class Candidato {
 	@CPF(message = "cpf inválido")
 	private String cpf;
 	
+	private String curso;
+	
+	private String instituicao;
+	
 	@Past
 	private LocalDate dataDeNascimento;
 	

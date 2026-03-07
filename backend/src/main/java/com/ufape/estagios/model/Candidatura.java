@@ -29,8 +29,8 @@ public class Candidatura {
 	
 	@NotNull(message = "O usuário é obrigatório")
     @ManyToOne
-	@JoinColumn(name = "usuario_id")
-	private Usuario usuario; //mudar para a classe estudante quando for implementada
+	@JoinColumn(name = "candidato_id")
+	private Candidato candidato; //mudar para a classe estudante quando for implementada
 	
 	@NotNull(message = "A vaga é obrigatória")
     @ManyToOne

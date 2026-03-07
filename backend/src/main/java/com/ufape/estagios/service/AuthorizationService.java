@@ -71,7 +71,7 @@ public class AuthorizationService implements UserDetailsService {
     	Candidato candidato = CandidatoMapper.toEntity(dto);
     	validarCPFRepetido(candidato);
 
-    	Usuario usuario = criarUsuario(dto.email(), dto.senha(), UserRole.COMPANY);
+    	Usuario usuario = criarUsuario(dto.email(), dto.senha(), UserRole.CANDIDATE);
     	
     	candidato.setUsuario(usuario);
     	
