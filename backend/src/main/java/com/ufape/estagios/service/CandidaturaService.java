@@ -178,7 +178,7 @@ public class CandidaturaService {
 	
 	private void validarAcessoACandidatura(Candidatura candidatura) {
 		Empresa empresa = findEmpresaByUsuarioAutenticado();
-		Usuario empresaDonaDaVaga = candidatura.getVaga().getEmpresa();
+		Empresa empresaDonaDaVaga = candidatura.getVaga().getEmpresa();
 		
 		if(empresa.getId() != empresaDonaDaVaga.getId()) {
 			throw new AccessDeniedException("Você não tem permissão para gerenciar essa candidatura");

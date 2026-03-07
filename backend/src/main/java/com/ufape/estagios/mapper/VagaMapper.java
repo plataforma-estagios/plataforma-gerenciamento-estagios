@@ -2,12 +2,12 @@ package com.ufape.estagios.mapper;
 
 import com.ufape.estagios.dto.VagaRequestDTO;
 import com.ufape.estagios.dto.VagaResponseDTO;
-import com.ufape.estagios.model.Usuario;
+import com.ufape.estagios.model.Empresa;
 import com.ufape.estagios.model.Vaga;
 
 public class VagaMapper {
 
-    public static Vaga toEntity(VagaRequestDTO dto, Usuario empresa) {
+    public static Vaga toEntity(VagaRequestDTO dto, Empresa empresa) {
         Vaga vaga = new Vaga();
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
@@ -43,7 +43,7 @@ public class VagaMapper {
         return new VagaResponseDTO(
                 vaga.getId(),
                 vaga.getTitulo(),
-                vaga.getEmpresa() != null ? vaga.getEmpresa().getEmail() : null,
+                vaga.getEmpresa() != null ? vaga.getEmpresa().getRazaoSocial() : null,
                 vaga.getDescricao(),
                 vaga.getRequisitos(),
                 vaga.getAreaConhecimento(),
@@ -55,7 +55,7 @@ public class VagaMapper {
                 vaga.getBeneficios(),
                 vaga.getSalario(),
                 vaga.getEmpresa() != null ? vaga.getEmpresa().getId() : null,
-                vaga.getEmpresa() != null ? vaga.getEmpresa().getEmail() : null,
+                vaga.getEmpresa() != null ? vaga.getEmpresa().getUsuario().getEmail() : null,
                 vaga.getStatus(),
                 vaga.isAtiva());
     }

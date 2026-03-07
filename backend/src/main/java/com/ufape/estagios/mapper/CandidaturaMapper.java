@@ -10,7 +10,7 @@ public class CandidaturaMapper {
 	
 	public static CandidaturaResponseDTO toDTO(Candidatura candidatura) {
 		CandidaturaResponseDTO dto = new CandidaturaResponseDTO(candidatura.getId(), candidatura.getVaga().getId(), 
-																candidatura.getVaga().getTitulo(), candidatura.getVaga().getEmpresa().getUsername(),
+																candidatura.getVaga().getTitulo(), candidatura.getVaga().getEmpresa().getRazaoSocial(),
 																candidatura.getCandidato().getNome(), 
 																candidatura.getStatus(), candidatura.getDataDaCandidatura());
 		

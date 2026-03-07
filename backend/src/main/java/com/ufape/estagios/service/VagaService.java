@@ -1,18 +1,11 @@
 package com.ufape.estagios.service;
 
-import com.ufape.estagios.dto.VagaRequestDTO;
-import com.ufape.estagios.dto.VagaResponseDTO;
-import com.ufape.estagios.exception.AccessDeniedException;
-import com.ufape.estagios.exception.IdNotFoundException;
-import com.ufape.estagios.mapper.VagaMapper;
-import com.ufape.estagios.model.Usuario;
-import com.ufape.estagios.model.UserRole;
-import com.ufape.estagios.model.Vaga;
-import com.ufape.estagios.model.TipoVaga;
-import com.ufape.estagios.model.Localizacao;
-import com.ufape.estagios.model.StatusDaVaga;
-import com.ufape.estagios.repository.VagaRepository;
-import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,23 +14,34 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ufape.estagios.dto.VagaRequestDTO;
+import com.ufape.estagios.dto.VagaResponseDTO;
+import com.ufape.estagios.exception.AccessDeniedException;
+import com.ufape.estagios.exception.IdNotFoundException;
+import com.ufape.estagios.mapper.VagaMapper;
+import com.ufape.estagios.model.Empresa;
+import com.ufape.estagios.model.Localizacao;
+import com.ufape.estagios.model.StatusDaVaga;
+import com.ufape.estagios.model.TipoVaga;
+import com.ufape.estagios.model.UserRole;
+import com.ufape.estagios.model.Usuario;
+import com.ufape.estagios.model.Vaga;
+import com.ufape.estagios.repository.EmpresaRepository;
+import com.ufape.estagios.repository.VagaRepository;
+
+import jakarta.persistence.criteria.Predicate;
 
 @Service
 public class VagaService {
     @Autowired
     private VagaRepository vagaRepository;
+    
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @Transactional
     public VagaResponseDTO cadastrarVaga(VagaRequestDTO dto) {
-        Usuario empresa = getUsuarioAutenticado();
-
-        if (empresa.getRole() != UserRole.COMPANY) {
-            throw new AccessDeniedException("Only companies can create jobs");
-        }
+        Empresa empresa = findEmpresaByUsuarioAutenticado();
 
         Vaga vaga = VagaMapper.toEntity(dto, empresa);
         vaga.setStatus(StatusDaVaga.EM_ABERTO);
@@ -96,11 +100,7 @@ public class VagaService {
     }
 
     public List<VagaResponseDTO> listarMinhasVagas() {
-        Usuario empresa = getUsuarioAutenticado();
-
-        if (empresa.getRole() != UserRole.COMPANY) {
-            throw new AccessDeniedException("Only companies can list yours jobs");
-        }
+        Empresa empresa = findEmpresaByUsuarioAutenticado();
 
         return vagaRepository.findByEmpresa(empresa)
                 .stream()
@@ -117,7 +117,7 @@ public class VagaService {
 
     @Transactional
     public VagaResponseDTO atualizarVaga(Long id, VagaRequestDTO dto) {
-        Usuario empresa = getUsuarioAutenticado();
+        Empresa empresa = findEmpresaByUsuarioAutenticado();
 
         Vaga vaga = vagaRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Job"));
@@ -133,7 +133,7 @@ public class VagaService {
 
     @Transactional
     public void desativarVaga(Long id) {
-        Usuario empresa = getUsuarioAutenticado();
+    	Empresa empresa = findEmpresaByUsuarioAutenticado();
 
         Vaga vaga = vagaRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Job"));
@@ -150,5 +150,13 @@ public class VagaService {
     private Usuario getUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Usuario) authentication.getPrincipal();
+    }
+    
+    private Empresa findEmpresaByUsuarioAutenticado() {
+    	Usuario usuario = getUsuarioAutenticado();
+    	
+    	Optional<Empresa> optionalEmpresa = empresaRepository.findByUsuario(usuario);
+    	
+    	return optionalEmpresa.orElseThrow(() -> new IdNotFoundException("Usuario"));
     }
 }
