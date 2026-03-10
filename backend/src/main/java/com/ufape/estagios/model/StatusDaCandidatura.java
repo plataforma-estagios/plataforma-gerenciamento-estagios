@@ -2,9 +2,10 @@ package com.ufape.estagios.model;
 
 public enum StatusDaCandidatura {
 	SUBMETIDA("Submetida"),    
-    EM_ANÁLISE("Em análise"),   
-    ENTREVISTA ("Entrevista"),   
-    APROVADA ("Aprovada"),     
+    EM_ANALISE("Em análise"),
+    ENTREVISTA ("Entrevista"),
+	PROXIMA_ETAPA("Próxima etapa"),
+	APROVADA ("Aprovada"),
     REPROVADA ("Reprovada"),    
     CANCELADA ("Cancelada");
 	
