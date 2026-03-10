@@ -93,7 +93,7 @@ public class EntrevistaServiceTest {
         candidatura.setId(1L);
         candidatura.setCandidato(candidato); 
         candidatura.setVaga(vaga);
-        candidatura.setStatus(StatusDaCandidatura.EM_ANÁLISE);
+        candidatura.setStatus(StatusDaCandidatura.EM_ANALISE);
 
         requestDTO = new AgendamentoRequestDTO(
                 1L,
