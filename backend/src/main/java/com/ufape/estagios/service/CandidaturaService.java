@@ -9,8 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.ufape.estagios.dto.RegistrarResultadoEntrevistaDTO;
-import com.ufape.estagios.dto.RegistrarResultadoEntrevistaResponseDTO;
 import com.ufape.estagios.dto.CandidaturaRequestDTO;
 import com.ufape.estagios.dto.CandidaturaResumoResponseDTO;
 import com.ufape.estagios.dto.EstudanteResponseDTO;
@@ -32,43 +30,43 @@ import com.ufape.estagios.repository.VagaRepository;
 
 import jakarta.transaction.Transactional;
 
-@Service
+@Service	
 public class CandidaturaService {
-
+	
 	@Autowired
 	private CandidaturaRepository candidaturaRepository;
-
+	
 	@Autowired
 	private VagaRepository vagaRepository;
-
+	
 	@Autowired
 	private CandidatoRepository candidatoRepository;
-
+	
 	@Autowired
 	private EmpresaRepository empresaRepository;
-
+	
 	@Transactional
 	public void saveCandidatura(Candidatura candidatura) {
 		candidaturaRepository.save(candidatura);
 	}
-
+	
 	@Transactional
 	public void createCandidatura(CandidaturaRequestDTO candidaturaRequest) {
 		Vaga vaga = findVagaById(candidaturaRequest.vagaId());
 		Candidato candidato = findCandidatoByUsuarioAutenticado();
-
+		
 		Candidatura candidatura = new Candidatura();
-
+		
 		candidatura.setDataDaCandidatura(LocalDateTime.now());
 		candidatura.setStatus(StatusDaCandidatura.SUBMETIDA);
 		candidatura.setVaga(vaga);
 		candidatura.setCandidato(candidato);
-
+		
 		validarNovaCandidatura(candidatura);
-
+		
 		saveCandidatura(candidatura);
 	}
-
+	
 	@Transactional
 	public void atualizarCandidatura(Long id, CandidaturaRequestDTO candidaturaRequest) {
 		Candidatura candidatura = candidaturaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Candidatura"));
@@ -79,71 +77,33 @@ public class CandidaturaService {
 
 			throw new RuntimeException("Não é possível alterar uma candidatura finalizada");
 		}
-
+		
 		candidatura.setStatus(candidaturaRequest.status());
-
+		
 		saveCandidatura(candidatura);
-	}
-
-	@Transactional
-	public RegistrarResultadoEntrevistaResponseDTO registrarResultadoEntrevista(
-			Long candidaturaId,
-			RegistrarResultadoEntrevistaDTO dto) {
-
-		Candidatura candidatura = candidaturaRepository.findById(candidaturaId)
-				.orElseThrow(() -> new IdNotFoundException("Candidatura"));
-
-		validarAcessoACandidatura(candidatura);
-
-		if (dto.resultado() != StatusDaCandidatura.APROVADA
-				&& dto.resultado() != StatusDaCandidatura.REPROVADA
-				&& dto.resultado() != StatusDaCandidatura.PROXIMA_ETAPA) {
-			throw new IllegalArgumentException(
-					"Resultado inválido. Use: APROVADA, REPROVADA ou PROXIMA_ETAPA.");
-		}
-
-		// Persiste resultado, comentário e data
-		candidatura.setResultadoEntrevista(dto.resultado());
-		candidatura.setComentarioEntrevista(dto.comentario());
-		candidatura.setDataResultadoEntrevista(LocalDateTime.now());
-
-		candidatura.setStatus(dto.resultado());
-
-		saveCandidatura(candidatura);
-
-		return new RegistrarResultadoEntrevistaResponseDTO(
-				candidatura.getId(),
-				candidatura.getCandidato().getNome(),
-				candidatura.getVaga().getTitulo(),
-				candidatura.getStatus(),
-				candidatura.getResultadoEntrevista(),
-				candidatura.getComentarioEntrevista(),
-				candidatura.getDataResultadoEntrevista(),
-				"Resultado da entrevista registrado com sucesso."
-		);
 	}
 
 	public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
 		Empresa empresa = findEmpresaByUsuarioAutenticado();
 		Vaga vaga = findVagaById(vagaId);
-
+		
 		if(empresa.getId() != vaga.getEmpresa().getId()) {
 			throw new AccessDeniedException("Você não tem permissão para listar as candidaturas dessa vaga");
 		}
-
+		
 		List<Candidatura> candidaturas = candidaturaRepository.findAllByVaga(vaga);
-
+		
 		return candidaturas;
 	}
-
+	
 	public List<Candidatura> listarCandidaturasDoEstudante() {
 		Candidato candidato = findCandidatoByUsuarioAutenticado();
-
+		
 		List<Candidatura> candidaturas = candidaturaRepository.findAllByCandidato(candidato);
-
+		
 		return candidaturas;
 	}
-
+	
 	public List<CandidaturaResumoResponseDTO> listarResumoCandidaturasDaVaga(Long vagaId) {
 
 		List<Candidatura> candidaturas = listarCandidaturasDaVaga(vagaId);
@@ -175,54 +135,54 @@ public class CandidaturaService {
 		Candidato estudante = candidatura.getCandidato();
 		return new EstudanteResponseDTO(estudante.getId(), estudante.getNome(), estudante.getUsuario().getEmail(), estudante.getCurso(), estudante.getInstituicao());
 	}
-
+	
 	private Usuario getUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Usuario) authentication.getPrincipal();
     }
-
+	
 	private Candidato findCandidatoByUsuarioAutenticado() {
 		Usuario usuario = getUsuarioAutenticado();
 		Optional<Candidato> optionalCandidato = candidatoRepository.findByUsuario(usuario);
-
+		
 		return optionalCandidato.orElseThrow(() -> new IdNotFoundException("Usuario"));
 	}
-
+	
 	private Empresa findEmpresaByUsuarioAutenticado() {
 		Usuario usuario = getUsuarioAutenticado();
 		Optional<Empresa> optionalEmpresa = empresaRepository.findByUsuario(usuario);
-
+		
 		return optionalEmpresa.orElseThrow(() -> new IdNotFoundException("Usuario"));
 	}
-
+	
 	private Vaga findVagaById(Long vagaId) {
 		Vaga vaga = vagaRepository.findById(vagaId).orElseThrow(() -> new IdNotFoundException("Vaga"));
-
+		
 		return vaga;
-	}
-
+	}	
+	
 	private void validarCandidaturaRepetida(Candidato candidato, Vaga vaga) {
 		Optional<Candidatura> candidaturaRepetida = candidaturaRepository.findByCandidatoAndVaga(candidato, vaga);
-
+		
 		if(candidaturaRepetida.isPresent()) throw new RuntimeException("Candidato já realizou a candidatura");
 	}
-
+	
 	private void validarNovaCandidatura(Candidatura candidatura) {
 		validarCandidaturaRepetida(candidatura.getCandidato(), candidatura.getVaga());
-
+		
 		Vaga vaga = candidatura.getVaga();
 		if(vaga.getStatus() != StatusDaVaga.EM_ABERTO) {
 			throw new ConflictException("Vaga não aceita mais candidaturas");
 		}
 	}
-
+	
 	private void validarAcessoACandidatura(Candidatura candidatura) {
 		Empresa empresa = findEmpresaByUsuarioAutenticado();
 		Empresa empresaDonaDaVaga = candidatura.getVaga().getEmpresa();
-
+		
 		if(empresa.getId() != empresaDonaDaVaga.getId()) {
 			throw new AccessDeniedException("Você não tem permissão para gerenciar essa candidatura");
 		}
-
+		
 	}
 }
