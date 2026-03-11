@@ -36,14 +36,18 @@ public class CandidaturaController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	@PatchMapping("/{id}/resultado-entrevista")
-	public ResponseEntity<RegistrarResultadoEntrevistaResponseDTO> registrarResultadoEntrevista(
-			@PathVariable Long id,
-			@RequestBody @Valid RegistrarResultadoEntrevistaDTO dto) {
-		RegistrarResultadoEntrevistaResponseDTO response =
-				candidaturaService.registrarResultadoEntrevista(id, dto);
-		return ResponseEntity.ok(response);
-	}
+	
+	  @PatchMapping("/{id}/resultado-entrevista") public
+	  ResponseEntity<RegistrarResultadoEntrevistaResponseDTO>
+	  registrarResultadoEntrevista(
+	  
+	  @PathVariable Long id,
+	  
+	  @RequestBody @Valid RegistrarResultadoEntrevistaDTO dto) {
+	  RegistrarResultadoEntrevistaResponseDTO response =
+	  candidaturaService.registrarResultadoEntrevista(id, dto); return
+	  ResponseEntity.ok(response); }
+	 
 	
 	@GetMapping("/vaga/{vagaId}")
 	public ResponseEntity<?> listarCandidaturasDaVaga(@PathVariable Long vagaId){

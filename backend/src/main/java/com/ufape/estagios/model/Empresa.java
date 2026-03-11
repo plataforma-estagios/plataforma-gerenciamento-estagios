@@ -1,5 +1,6 @@
 package com.ufape.estagios.model;
 
+
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import jakarta.persistence.Entity;

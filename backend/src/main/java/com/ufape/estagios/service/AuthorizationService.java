@@ -27,6 +27,8 @@ import com.ufape.estagios.repository.CandidatoRepository;
 import com.ufape.estagios.repository.EmpresaRepository;
 import com.ufape.estagios.repository.UsuarioRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AuthorizationService implements UserDetailsService {
 
@@ -65,7 +67,8 @@ public class AuthorizationService implements UserDetailsService {
 		return token;
 
 	}
-
+	
+	@Transactional
     public void candidatoRegistro(CandidatoRegisterDTO dto) {
     	
     	Candidato candidato = CandidatoMapper.toEntity(dto);
@@ -78,6 +81,7 @@ public class AuthorizationService implements UserDetailsService {
     	candidatoRepository.save(candidato);
     }
     
+	@Transactional
     public void empresaRegistro(EmpresaRegisterDTO dto) {
     	
     	Empresa empresa = EmpresaMapper.toEntity(dto);

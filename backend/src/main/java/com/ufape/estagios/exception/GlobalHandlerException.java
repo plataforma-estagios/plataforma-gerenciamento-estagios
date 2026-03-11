@@ -1,10 +1,17 @@
 package com.ufape.estagios.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import jakarta.validation.ConstraintViolationException;
+
 
 @RestControllerAdvice
 public class GlobalHandlerException {
@@ -28,9 +35,30 @@ public class GlobalHandlerException {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
-	@ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
-	public ResponseEntity<String> handlerMethodArgumentNotValidException(org.springframework.web.bind.MethodArgumentNotValidException ex){
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getBindingResult().getFieldError().getDefaultMessage());
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		Map<String, String> errors = new HashMap<>();
+		
+		e.getBindingResult().getFieldErrors().forEach(error -> {
+			errors.put(error.getField(), error.getDefaultMessage());
+		});
+		
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+	
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<Map<String, String>> handleConstraintViolationException(
+	        ConstraintViolationException e) {
+
+	    Map<String, String> errors = new HashMap<>();
+
+	    e.getConstraintViolations().forEach(violation -> {
+	        String field = violation.getPropertyPath().toString();
+	        String message = violation.getMessage();
+	        errors.put(field, message);
+	    });
+
+	    return ResponseEntity.badRequest().body(errors);
 	}
 	
 	@ExceptionHandler(ConflictException.class)
