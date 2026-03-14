@@ -18,15 +18,13 @@ import com.ufape.estagios.exception.ConflictException;
 import com.ufape.estagios.exception.IdNotFoundException;
 import com.ufape.estagios.model.Candidato;
 import com.ufape.estagios.model.Candidatura;
-import com.ufape.estagios.model.Empresa;
 import com.ufape.estagios.model.StatusDaCandidatura;
 import com.ufape.estagios.model.StatusDaVaga;
-import com.ufape.estagios.model.TipoNotificacao; // Import adicionado
+import com.ufape.estagios.model.TipoNotificacao;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidatoRepository;
 import com.ufape.estagios.repository.CandidaturaRepository;
-import com.ufape.estagios.repository.EmpresaRepository;
 import com.ufape.estagios.repository.VagaRepository;
 
 import jakarta.transaction.Transactional;
@@ -42,9 +40,6 @@ public class CandidaturaService {
     
     @Autowired
     private CandidatoRepository candidatoRepository;
-    
-    @Autowired
-    private EmpresaRepository empresaRepository;
 
     @Autowired
     private NotificacaoService notificacaoService; 
@@ -99,10 +94,11 @@ public class CandidaturaService {
     }
 
     public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
-        Empresa empresa = findEmpresaByUsuarioAutenticado();
         Vaga vaga = findVagaById(vagaId);
+        Usuario usuarioDaEmpresaDonaDaVaga = vaga.getEmpresa().getUsuario();
+        Usuario usuarioLogado = getUsuarioAutenticado();
         
-        if(empresa.getId() != vaga.getEmpresa().getId()) {
+        if(usuarioLogado.getId() != usuarioDaEmpresaDonaDaVaga.getId()) {
             throw new AccessDeniedException("Você não tem permissão para listar as candidaturas dessa vaga");
         }
         
@@ -163,13 +159,6 @@ public class CandidaturaService {
         return optionalCandidato.orElseThrow(() -> new IdNotFoundException("Usuario"));
     }
     
-    private Empresa findEmpresaByUsuarioAutenticado() {
-        Usuario usuario = getUsuarioAutenticado();
-        Optional<Empresa> optionalEmpresa = empresaRepository.findByUsuario(usuario);
-        
-        return optionalEmpresa.orElseThrow(() -> new IdNotFoundException("Usuario"));
-    }
-    
     private Vaga findVagaById(Long vagaId) {
         Vaga vaga = vagaRepository.findById(vagaId).orElseThrow(() -> new IdNotFoundException("Vaga"));
         
@@ -192,10 +181,10 @@ public class CandidaturaService {
     }
     
     private void validarAcessoACandidatura(Candidatura candidatura) {
-        Empresa empresa = findEmpresaByUsuarioAutenticado();
-        Empresa empresaDonaDaVaga = candidatura.getVaga().getEmpresa();
+        Usuario usuarioLogado = getUsuarioAutenticado();
+        Usuario usuarioDaEmpresaDonaDaVaga = candidatura.getVaga().getEmpresa().getUsuario();
         
-        if(empresa.getId() != empresaDonaDaVaga.getId()) {
+        if(usuarioLogado.getId() != usuarioDaEmpresaDonaDaVaga.getId()) {
             throw new AccessDeniedException("Você não tem permissão para gerenciar essa candidatura");
         }
         
