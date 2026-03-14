@@ -23,7 +23,6 @@ import com.ufape.estagios.model.Empresa;
 import com.ufape.estagios.model.Localizacao;
 import com.ufape.estagios.model.StatusDaVaga;
 import com.ufape.estagios.model.TipoVaga;
-import com.ufape.estagios.model.UserRole;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.EmpresaRepository;
@@ -109,22 +108,16 @@ public class VagaService {
     }
 
     public VagaResponseDTO buscarVagaPorId(Long id) {
-        Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Job"));
+        Vaga vaga = findById(id);
 
         return VagaMapper.fromEntity(vaga);
     }
 
     @Transactional
     public VagaResponseDTO atualizarVaga(Long id, VagaRequestDTO dto) {
-        Empresa empresa = findEmpresaByUsuarioAutenticado();
+        Vaga vaga = findById(id);
 
-        Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Job"));
-
-        if (!vaga.getEmpresa().getId().equals(empresa.getId())) {
-            throw new AccessDeniedException("You dont have permission to update this job");
-        }
+        validarAcessoAVaga(vaga);
 
         vaga = VagaMapper.updateVaga(vaga, dto);
         Vaga vagaAtualizada = vagaRepository.save(vaga);
@@ -133,18 +126,17 @@ public class VagaService {
 
     @Transactional
     public void desativarVaga(Long id) {
-    	Empresa empresa = findEmpresaByUsuarioAutenticado();
-
-        Vaga vaga = vagaRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Job"));
-
-        if (!vaga.getEmpresa().getId().equals(empresa.getId())) {
-            throw new AccessDeniedException("You dont have permission to update this job");
-        }
+        Vaga vaga = findById(id);
+        
+        validarAcessoAVaga(vaga);
 
         vaga.setAtiva(false);
         vaga.setStatus(StatusDaVaga.FECHADA);
         vagaRepository.save(vaga);
+    }
+    
+    public Vaga findById(Long id) {
+    	return vagaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Vaga"));
     }
 
     private Usuario getUsuarioAutenticado() {
@@ -158,5 +150,13 @@ public class VagaService {
     	Optional<Empresa> optionalEmpresa = empresaRepository.findByUsuario(usuario);
     	
     	return optionalEmpresa.orElseThrow(() -> new IdNotFoundException("Usuario"));
+    }
+    
+    private void validarAcessoAVaga(Vaga vaga) {
+    	Usuario usuarioLogado = getUsuarioAutenticado();
+    	
+    	if (!vaga.getEmpresa().getUsuario().getId().equals(usuarioLogado.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para gerenciar essa vaga");
+        }
     }
 }
