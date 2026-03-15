@@ -74,7 +74,8 @@ class VagaServiceTest {
                 LocalDate.now().plusDays(30),
                 "Vale alimentação, Vale transporte",
                 "R$ 3.500,00",
-                TipoVaga.EMPREGO
+                TipoVaga.EMPREGO,
+                StatusDaVaga.EM_ABERTO
         );
 
         vaga = new Vaga();
