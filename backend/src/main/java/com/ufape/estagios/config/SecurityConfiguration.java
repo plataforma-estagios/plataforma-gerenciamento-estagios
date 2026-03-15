@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/vagas/minhas-vagas").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.PUT, "/api/vagas/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.DELETE, "/api/vagas/**").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.POST, "/api/candidatura").hasRole("CANDIDATE")
                         .requestMatchers(HttpMethod.POST, "/api/candidatura/**").hasRole("CANDIDATE")
                         .requestMatchers(HttpMethod.PUT, "/api/candidatura/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.PATCH, "/api/candidatura/**").hasRole("COMPANY")
