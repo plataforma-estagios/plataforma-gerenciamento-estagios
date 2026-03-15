@@ -95,6 +95,42 @@
         </div>
 
         <div class="register-form__item">
+          <label for="candidate-course">Curso:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="candidate-course"
+            name="curso"
+            placeholder="Digite seu curso"
+            formControlName="curso"
+          />
+
+          @if (candidateForm.get('curso')?.invalid && candidateForm.get('curso')?.touched) {
+            <div class="register-form__error">
+              <span>Curso é obrigatório</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="candidate-institution">Instituição:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="candidate-institution"
+            name="instituicao"
+            placeholder="Digite sua instituição"
+            formControlName="instituicao"
+          />
+
+          @if (candidateForm.get('instituicao')?.invalid && candidateForm.get('instituicao')?.touched) {
+            <div class="register-form__error">
+              <span>Instituição é obrigatória</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
           <label for="candidate-email">Email:</label>
           <input
             class="register-form__input"

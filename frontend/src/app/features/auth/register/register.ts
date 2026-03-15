@@ -26,6 +26,8 @@ export class Register {
       nome: ['', [Validators.required]],
       cpf: ['', [Validators.required]],
       dataNascimento: ['', [Validators.required]],
+      curso: ['', [Validators.required]],
+      instituicao: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required]],
     });
@@ -63,6 +65,8 @@ export class Register {
           nome: raw.nome,
           cpf,
           dataNascimento: raw.dataNascimento,
+          curso: raw.curso,
+          instituicao: raw.instituicao,
           email: String(raw.email).trim(),
           senha: raw.senha,
         })
