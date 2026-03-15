@@ -20,6 +20,7 @@ import com.ufape.estagios.model.Candidato;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.model.StatusDaCandidatura;
 import com.ufape.estagios.model.StatusDaVaga;
+import com.ufape.estagios.model.TipoNotificacao;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidatoRepository;
@@ -40,6 +41,9 @@ public class CandidaturaService {
 	@Autowired
 	private CandidatoRepository candidatoRepository;
 	
+	@Autowired
+	private NotificacaoService notificacaoService;
+	
 	@Transactional
 	public void createCandidatura(CandidaturaRequestDTO candidaturaRequest) {
 		Vaga vaga = findVagaById(candidaturaRequest.vagaId());
@@ -55,6 +59,7 @@ public class CandidaturaService {
 		validarNovaCandidatura(candidatura);
 		
 		candidaturaRepository.save(candidatura);
+		criarNovaNotificao(candidatura);
 	}
 	
 	@Transactional
@@ -71,6 +76,8 @@ public class CandidaturaService {
 		candidatura.setStatus(candidaturaRequest.status());
 		
 		candidaturaRepository.save(candidatura);
+		
+		criarNovaNotificao(candidatura);
 	}
 
 	public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
@@ -168,5 +175,12 @@ public class CandidaturaService {
 			throw new AccessDeniedException("Você não tem permissão para gerenciar as candidaturas dessa vaga");
 		}
 		
+	}
+	
+	private void criarNovaNotificao(Candidatura candidatura) {
+		StatusDaCandidatura status = candidatura.getStatus();
+		Vaga vaga = candidatura.getVaga();
+		notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), status.getMensagemDeNotificacao(), status.getTipoNotificacao(), vaga.getTitulo());
+        
 	}
 }
