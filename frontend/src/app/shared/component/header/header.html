@@ -14,6 +14,49 @@
         @if (role === 'CANDIDATE') {
         <a class="header__link" routerLink="/users/candidate">Vagas</a>
         <a class="header__link" routerLink="/users/candidate/my-applications">Minhas candidaturas</a>
+
+        <div class="header__notifications-container">
+            <button class="header__notifications-button" (click)="toggleNotificationsMenu()">
+                <lucide-icon [name]="BellIcon"></lucide-icon>
+                @if (unreadCount > 0) {
+                <span class="header__notifications-badge">{{ unreadCount }}</span>
+                }
+            </button>
+
+            @if (isNotificationsMenuOpen) {
+            <div class="header__notifications-menu" (click)="$event.stopPropagation()">
+                <div class="header__notifications-header">
+                    <span class="header__notifications-title">Notificações</span>
+                </div>
+
+                @if (isLoadingNotifications) {
+                <div class="header__notifications-empty">Carregando...</div>
+                } @else if (notifications.length === 0) {
+                <div class="header__notifications-empty">Sem notificações</div>
+                } @else {
+                <div class="header__notifications-list">
+                    @for (n of notifications; track n.id) {
+                    <div class="header__notification-item" [class.header__notification-item--unread]="!n.lida">
+                        <div class="header__notification-content">
+                            <div class="header__notification-message">{{ n.mensagem }}</div>
+                            <div class="header__notification-meta">
+                                <span class="header__notification-type">{{ n.tipo }}</span>
+                                <span class="header__notification-date">{{ n.dataEnvio | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </div>
+                        </div>
+
+                        @if (!n.lida) {
+                        <button class="header__notification-action" (click)="markAsRead(n); $event.stopPropagation()">
+                            <lucide-icon [name]="CheckIcon" [size]="18"></lucide-icon>
+                        </button>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </div>
         }
 
         <button class="header__profile-container" (click)="toggleProfileMenu()">
