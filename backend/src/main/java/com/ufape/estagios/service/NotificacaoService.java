@@ -23,11 +23,12 @@ public class NotificacaoService {
     private NotificacaoRepository notificacaoRepository;
 
     @Transactional
-    public void criarNotificacao(Usuario estudante, String mensagem, TipoNotificacao tipo) {
+    public void criarNotificacao(Usuario estudante, String mensagem, TipoNotificacao tipo, String tituloDaVaga) {
         Notificacao notificacao = new Notificacao();
         notificacao.setUsuario(estudante);
         notificacao.setMensagem(mensagem);
         notificacao.setTipo(tipo);
+        notificacao.setTituloDaVaga(tituloDaVaga);
         
         notificacaoRepository.save(notificacao);
     }
@@ -40,6 +41,7 @@ public class NotificacaoService {
                 .map(n -> new NotificacaoResponseDTO(
                         n.getId(), 
                         n.getMensagem(), 
+                        n.getTituloDaVaga(),
                         n.getTipo(), 
                         n.isLida(), 
                         n.getDataEnvio()))

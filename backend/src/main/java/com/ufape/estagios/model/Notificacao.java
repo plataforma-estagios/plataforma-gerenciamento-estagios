@@ -46,6 +46,9 @@ public class Notificacao {
 
     @Column(name = "data_envio", nullable = false)
     private LocalDateTime dataEnvio;
+    
+    @Column(name = "titulo_da_vaga", nullable = false)
+    private String tituloDaVaga;
 
     @PrePersist
     protected void onCreate() {

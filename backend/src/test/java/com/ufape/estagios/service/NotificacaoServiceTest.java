@@ -68,7 +68,7 @@ public class NotificacaoServiceTest {
 
     @Test
     void criarNotificacao_DeveSalvarNoRepositorio() {
-        notificacaoService.criarNotificacao(estudante, "Aprovado", TipoNotificacao.SUCESSO);
+        notificacaoService.criarNotificacao(estudante, "Aprovado", TipoNotificacao.SUCESSO, "Desenvolvedor Front-end");
         verify(notificacaoRepository, times(1)).save(any(Notificacao.class));
     }
 

@@ -59,6 +59,7 @@ public class CandidaturaService {
 		validarNovaCandidatura(candidatura);
 		
 		candidaturaRepository.save(candidatura);
+		criarNovaNotificao(candidatura);
 	}
 	
 	@Transactional
@@ -72,19 +73,11 @@ public class CandidaturaService {
 			throw new ConflictException("Não é possível alterar uma candidatura finalizada");
 		}
 		
-		StatusDaCandidatura novoStatus = candidatura.getStatus();
 		candidatura.setStatus(candidaturaRequest.status());
 		
 		candidaturaRepository.save(candidatura);
 		
-		if (novoStatus == StatusDaCandidatura.APROVADA) {
-            String mensagem = "Parabéns! Você foi APROVADO(A) na seleção para a vaga: " + candidatura.getVaga().getTitulo();
-            notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), mensagem, TipoNotificacao.SUCESSO);
-            
-        } else if (novoStatus == StatusDaCandidatura.REPROVADA) {
-            String mensagem = "Infelizmente o seu perfil não seguiu adiante na seleção para a vaga: " + candidatura.getVaga().getTitulo();
-            notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), mensagem, TipoNotificacao.FALHA);
-        }
+		criarNovaNotificao(candidatura);
 	}
 
 	public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
@@ -182,5 +175,12 @@ public class CandidaturaService {
 			throw new AccessDeniedException("Você não tem permissão para gerenciar as candidaturas dessa vaga");
 		}
 		
+	}
+	
+	private void criarNovaNotificao(Candidatura candidatura) {
+		StatusDaCandidatura status = candidatura.getStatus();
+		Vaga vaga = candidatura.getVaga();
+		notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), status.getMensagemDeNotificacao(), status.getTipoNotificacao(), vaga.getTitulo());
+        
 	}
 }
