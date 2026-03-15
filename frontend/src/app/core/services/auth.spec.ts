@@ -17,10 +17,23 @@ describe('AuthService', () => {
 
   const TOKEN_KEY = 'auth_token';
   
-  const FAKE_USER = {
+  const FAKE_CANDIDATE = {
+    nome: 'João Teste',
+    cpf: '12345678901',
+    dataNascimento: '2000-01-01',
+    curso: 'Engenharia de Software',
+    instituicao: 'UFAPE',
     email: 'teste@gmail.com',
-    password: `pass-${Math.random()}`,
-    role: 'candidate' as const, 
+    senha: 'password123',
+  };
+
+  const FAKE_COMPANY = {
+    razaoSocial: 'Empresa Teste',
+    cnpj: '12345678000199',
+    setor: 'Tecnologia',
+    localizacao: 'Garanhuns',
+    email: 'empresa@teste.com',
+    senha: 'password123',
   };
 
   const FAKE_TOKEN = 'TOKEN_GERADO_PELA_API';
@@ -41,13 +54,22 @@ describe('AuthService', () => {
     localStorage.clear();
   });
 
-  it('register deve fazer POST no endpoint correto com body correto', () => {
-   
-    service.register(FAKE_USER).subscribe();
+  it('registerCandidate deve fazer POST no endpoint correto com body correto', () => {
+    service.registerCandidate(FAKE_CANDIDATE).subscribe();
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/auth/register`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/auth/register/candidato`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(FAKE_USER);
+    expect(req.request.body).toEqual(FAKE_CANDIDATE);
+
+    req.flush({});
+  });
+
+  it('registerCompany deve fazer POST no endpoint correto com body correto', () => {
+    service.registerCompany(FAKE_COMPANY).subscribe();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/auth/register/empresa`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(FAKE_COMPANY);
 
     req.flush({});
   });
@@ -75,17 +97,18 @@ describe('AuthService', () => {
 
   it('getRole deve retornar role do token', () => {
     const roleMock = 'company';
-    const token = makeFakeJwt({ sub: FAKE_USER.email, role: roleMock });
+    const token = makeFakeJwt({ sub: FAKE_CANDIDATE.email, role: roleMock });
     
     localStorage.setItem(TOKEN_KEY, token);
     expect(service.getRole()).toBe(roleMock);
   });
 
   it('getEmail deve retornar sub (email) do token', () => {
-    const token = makeFakeJwt({ sub: FAKE_USER.email, role: FAKE_USER.role });
+    const roleMock = 'candidate';
+    const token = makeFakeJwt({ sub: FAKE_CANDIDATE.email, role: roleMock });
     
     localStorage.setItem(TOKEN_KEY, token);
-    expect(service.getEmail()).toBe(FAKE_USER.email);
+    expect(service.getEmail()).toBe(FAKE_CANDIDATE.email);
   });
 
   it('getRole e getEmail devem retornar null quando nao tem token', () => {
@@ -95,7 +118,7 @@ describe('AuthService', () => {
   });
 
   it('login deve fazer POST e salvar token no localStorage', () => {
-    const loginData = { email: FAKE_USER.email, password: FAKE_USER.password };
+    const loginData = { email: FAKE_CANDIDATE.email, password: FAKE_CANDIDATE.senha };
     
     service.login(loginData).subscribe();
 
