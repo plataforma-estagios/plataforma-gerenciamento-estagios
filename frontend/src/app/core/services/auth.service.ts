@@ -14,17 +14,25 @@ interface LoginDTO {
   password: string;
 }
 
-interface RegisterDTO {
-  name?: string;
+interface CandidateRegisterDTO {
+  nome: string;
+  cpf: string;
+  curso?: string;
+  instituicao?: string;
+  dataNascimento: string;
   email: string;
-  password: string;
-  cpf?: string;
-  cnpj?: string;
-  birthdate?: string;
-  location?: string;
-  website?: string;
-  sector?: string;
-  role: 'candidate' | 'company';
+  senha: string;
+}
+
+interface CompanyRegisterDTO {
+  razaoSocial: string;
+  setor: string;
+  cnpj: string;
+  link?: string;
+  descricao?: string;
+  localizacao: string;
+  email: string;
+  senha: string;
 }
 
 @Injectable({
@@ -50,30 +58,12 @@ export class AuthService {
       );
   }
 
-  register({
-    //name,
-    email,
-    password,
-    //cpf,
-    //cnpj,
-    //birthdate,
-    //location,
-    //website,
-    //sector,
-    role,
-  }: RegisterDTO) {
-    return this.http.post(`${environment.apiUrl}/auth/register`, {
-      // name,
-      email,
-      password,
-      // cpf,
-      //cnpj,
-      //birthdate,
-      //location,
-      //website,
-      //sector,
-      role,
-    });
+  registerCandidate(dto: CandidateRegisterDTO) {
+    return this.http.post(`${environment.apiUrl}/auth/register/candidato`, dto);
+  }
+
+  registerCompany(dto: CompanyRegisterDTO) {
+    return this.http.post(`${environment.apiUrl}/auth/register/empresa`, dto);
   }
 
   logout() {
