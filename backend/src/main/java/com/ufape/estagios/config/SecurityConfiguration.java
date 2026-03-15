@@ -46,6 +46,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/candidatura/vaga/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.GET, "/api/candidatura/minhas-candidaturas").hasRole("CANDIDATE")
                         .requestMatchers(HttpMethod.POST, "/api/entrevistas").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/api/notificacoes/**").hasRole("CANDIDATE")
+                        .requestMatchers(HttpMethod.PUT, "/api/notificacoes/**").hasRole("CANDIDATE")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
