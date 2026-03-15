@@ -13,14 +13,16 @@ import com.ufape.estagios.dto.CandidaturaRequestDTO;
 import com.ufape.estagios.dto.CandidaturaResumoResponseDTO;
 import com.ufape.estagios.dto.EstudanteResponseDTO;
 import com.ufape.estagios.dto.EstudanteResumoResponseDTO;
+import com.ufape.estagios.dto.ResultadoEntrevistaRequestDTO;
+import com.ufape.estagios.dto.ResultadoEntrevistaResponseDTO;
 import com.ufape.estagios.exception.AccessDeniedException;
 import com.ufape.estagios.exception.ConflictException;
 import com.ufape.estagios.exception.IdNotFoundException;
+import com.ufape.estagios.mapper.CandidaturaMapper;
 import com.ufape.estagios.model.Candidato;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.model.StatusDaCandidatura;
 import com.ufape.estagios.model.StatusDaVaga;
-import com.ufape.estagios.model.TipoNotificacao;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidatoRepository;
@@ -182,5 +184,37 @@ public class CandidaturaService {
 		Vaga vaga = candidatura.getVaga();
 		notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), status.getMensagemDeNotificacao(), status.getTipoNotificacao(), vaga.getTitulo());
         
+	}
+
+	@Transactional
+	public ResultadoEntrevistaResponseDTO registrarResultadoEntrevista(
+			Long candidaturaId,
+			ResultadoEntrevistaRequestDTO dto) {
+
+		Candidatura candidatura = candidaturaRepository.findById(candidaturaId)
+				.orElseThrow(() -> new IdNotFoundException("Candidatura"));
+
+		validarAcessoAVaga(candidatura.getVaga());
+
+		if (dto.resultado() != StatusDaCandidatura.APROVADA
+				&& dto.resultado() != StatusDaCandidatura.REPROVADA
+				&& dto.resultado() != StatusDaCandidatura.PROXIMA_ETAPA) {
+			throw new ConflictException("Resultado inválido. Use: APROVADA, REPROVADA ou PROXIMA_ETAPA.");
+		}
+
+		candidatura = CandidaturaMapper.adicionarResultadoDaEntrevista(dto, candidatura);
+
+		candidaturaRepository.save(candidatura);
+
+		return new ResultadoEntrevistaResponseDTO(
+				candidatura.getId(),
+				candidatura.getCandidato().getNome(),
+				candidatura.getVaga().getTitulo(),
+				candidatura.getStatus(),
+				candidatura.getResultadoEntrevista(),
+				candidatura.getComentarioEntrevista(),
+				candidatura.getDataResultadoEntrevista(),
+				"Resultado da entrevista registrado com sucesso."
+		);
 	}
 }

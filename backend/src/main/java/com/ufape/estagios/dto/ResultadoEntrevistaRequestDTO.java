@@ -4,11 +4,9 @@ import com.ufape.estagios.model.StatusDaCandidatura;
 
 import jakarta.validation.constraints.NotNull;
 
-public record RegistrarResultadoEntrevistaDTO(
-
+public record ResultadoEntrevistaRequestDTO(
         @NotNull(message = "O resultado é obrigatório")
-        StatusDaCandidatura resultado,  // APROVADA, REPROVADA ou PROXIMA_ETAPA
+        StatusDaCandidatura resultado,  
 
-        String comentario               // opcional
-) {
-}
+        String comentario               
+) {}

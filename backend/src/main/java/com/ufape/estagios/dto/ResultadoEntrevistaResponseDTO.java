@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.ufape.estagios.model.StatusDaCandidatura;
 
-public record RegistrarResultadoEntrevistaResponseDTO(
+public record ResultadoEntrevistaResponseDTO(
         Long candidaturaId,
         String nomeCandidato,
         String tituloVaga,

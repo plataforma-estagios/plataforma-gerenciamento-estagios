@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ufape.estagios.dto.RegistrarResultadoEntrevistaResponseDTO;
-import com.ufape.estagios.dto.RegistrarResultadoEntrevistaDTO;
 import com.ufape.estagios.mapper.CandidaturaMapper;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.service.CandidaturaService;
@@ -37,16 +35,11 @@ public class CandidaturaController {
 	}
 
 	
-	  @PatchMapping("/{id}/resultado-entrevista") public
-	  ResponseEntity<RegistrarResultadoEntrevistaResponseDTO>
-	  registrarResultadoEntrevista(
-	  
-	  @PathVariable Long id,
-	  
-	  @RequestBody @Valid RegistrarResultadoEntrevistaDTO dto) {
-	  RegistrarResultadoEntrevistaResponseDTO response =
-	  candidaturaService.registrarResultadoEntrevista(id, dto); return
-	  ResponseEntity.ok(response); }
+	@PatchMapping("/{id}/resultado-entrevista")
+	public ResponseEntity<ResultadoEntrevistaResponseDTO> registrarResultadoEntrevista(@PathVariable Long id, @RequestBody @Valid ResultadoEntrevistaRequestDTO dto) {
+		ResultadoEntrevistaResponseDTO response = candidaturaService.registrarResultadoEntrevista(id, dto);
+		return ResponseEntity.ok(response);
+	}
 	 
 	
 	@GetMapping("/vaga/{vagaId}")
