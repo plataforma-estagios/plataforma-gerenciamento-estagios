@@ -20,6 +20,7 @@ import com.ufape.estagios.model.Candidato;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.model.StatusDaCandidatura;
 import com.ufape.estagios.model.StatusDaVaga;
+import com.ufape.estagios.model.TipoNotificacao;
 import com.ufape.estagios.model.Usuario;
 import com.ufape.estagios.model.Vaga;
 import com.ufape.estagios.repository.CandidatoRepository;
@@ -39,6 +40,9 @@ public class CandidaturaService {
 	
 	@Autowired
 	private CandidatoRepository candidatoRepository;
+	
+	@Autowired
+	private NotificacaoService notificacaoService;
 	
 	@Transactional
 	public void createCandidatura(CandidaturaRequestDTO candidaturaRequest) {
@@ -68,9 +72,19 @@ public class CandidaturaService {
 			throw new ConflictException("Não é possível alterar uma candidatura finalizada");
 		}
 		
+		StatusDaCandidatura novoStatus = candidatura.getStatus();
 		candidatura.setStatus(candidaturaRequest.status());
 		
 		candidaturaRepository.save(candidatura);
+		
+		if (novoStatus == StatusDaCandidatura.APROVADA) {
+            String mensagem = "Parabéns! Você foi APROVADO(A) na seleção para a vaga: " + candidatura.getVaga().getTitulo();
+            notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), mensagem, TipoNotificacao.SUCESSO);
+            
+        } else if (novoStatus == StatusDaCandidatura.REPROVADA) {
+            String mensagem = "Infelizmente o seu perfil não seguiu adiante na seleção para a vaga: " + candidatura.getVaga().getTitulo();
+            notificacaoService.criarNotificacao(candidatura.getCandidato().getUsuario(), mensagem, TipoNotificacao.FALHA);
+        }
 	}
 
 	public List<Candidatura> listarCandidaturasDaVaga(Long vagaId){
