@@ -27,13 +27,13 @@ BEGIN
     SET status = default_status 
     WHERE status IS NULL OR NOT (status = ANY(status_permitidos));
 
-    ALTER TABLE vagas ALTER COLUMN status SET DEFAULT default_status;
+    ALTER TABLE vagas ALTER COLUMN status SET DEFAULT 'EM_ABERTO';
     ALTER TABLE vagas ALTER COLUMN status SET NOT NULL;
 
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'vagas_status_check') THEN
         ALTER TABLE vagas 
             ADD CONSTRAINT vagas_status_check 
-            CHECK (status = ANY(status_permitidos));
+            CHECK (status IN ('EM_ABERTO', 'FECHADA', 'CANCELADA', 'ENCERRADA'));
     END IF;
 
 END $$;
