@@ -137,6 +137,9 @@ public class EntrevistaServiceTest {
     @Test
     void agendarEntrevista_NaoSendoEmpresa_DeveLancarException() {
         mockAutenticacao(usuarioCandidato); 
+        
+        when(candidaturaRepository.findById(1L))
+        .thenReturn(Optional.of(candidatura));
 
         assertThrows(AccessDeniedException.class, () -> {
             entrevistaService.agendarEntrevista(requestDTO);
