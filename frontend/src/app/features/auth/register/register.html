@@ -47,19 +47,89 @@
             class="register-form__input"
             type="text"
             id="candidate-name"
-            name="name"
+            name="nome"
             placeholder="Digite seu nome completo"
-            formControlName="name"
+            formControlName="nome"
           />
 
-          @if (candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched) {
+          @if (candidateForm.get('nome')?.invalid && candidateForm.get('nome')?.touched) {
             <div class="register-form__error">
               <span>Nome completo é obrigatório</span>
             </div>
           }
         </div>
 
-       
+        <div class="register-form__item">
+          <label for="candidate-cpf">CPF:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="candidate-cpf"
+            name="cpf"
+            placeholder="Digite seu CPF"
+            formControlName="cpf"
+          />
+
+          @if (candidateForm.get('cpf')?.invalid && candidateForm.get('cpf')?.touched) {
+            <div class="register-form__error">
+              <span>CPF é obrigatório</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="candidate-birthdate">Data de nascimento:</label>
+          <input
+            class="register-form__input"
+            type="date"
+            id="candidate-birthdate"
+            name="dataNascimento"
+            formControlName="dataNascimento"
+          />
+
+          @if (candidateForm.get('dataNascimento')?.invalid && candidateForm.get('dataNascimento')?.touched) {
+            <div class="register-form__error">
+              <span>Data de nascimento é obrigatória</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="candidate-course">Curso:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="candidate-course"
+            name="curso"
+            placeholder="Digite seu curso"
+            formControlName="curso"
+          />
+
+          @if (candidateForm.get('curso')?.invalid && candidateForm.get('curso')?.touched) {
+            <div class="register-form__error">
+              <span>Curso é obrigatório</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="candidate-institution">Instituição:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="candidate-institution"
+            name="instituicao"
+            placeholder="Digite sua instituição"
+            formControlName="instituicao"
+          />
+
+          @if (candidateForm.get('instituicao')?.invalid && candidateForm.get('instituicao')?.touched) {
+            <div class="register-form__error">
+              <span>Instituição é obrigatória</span>
+            </div>
+          }
+        </div>
+
         <div class="register-form__item">
           <label for="candidate-email">Email:</label>
           <input
@@ -84,12 +154,12 @@
             class="register-form__input"
             type="password"
             id="candidate-password"
-            name="password"
+            name="senha"
             placeholder="Digite sua senha"
-            formControlName="password"
+            formControlName="senha"
           />
 
-          @if (candidateForm.get('password')?.invalid && candidateForm.get('password')?.touched) {
+          @if (candidateForm.get('senha')?.invalid && candidateForm.get('senha')?.touched) {
             <div class="register-form__error">
               <span>Senha inválida</span>
             </div>
@@ -109,24 +179,100 @@
     @if (activeTab === 'company') {
       <form class="register-form" [formGroup]="companyForm" (ngSubmit)="onSubmit()">
         <div class="register-form__item">
-          <label for="company-name">Nome da empresa:</label>
+          <label for="company-name">Razão social:</label>
           <input
             class="register-form__input"
             type="text"
             id="company-name"
-            name="companyName"
-            placeholder="Digite o nome da empresa"
-            formControlName="name"
+            name="razaoSocial"
+            placeholder="Digite a razão social"
+            formControlName="razaoSocial"
           />
 
-          @if (companyForm.get('name')?.invalid && companyForm.get('name')?.touched) {
+          @if (companyForm.get('razaoSocial')?.invalid && companyForm.get('razaoSocial')?.touched) {
             <div class="register-form__error">
-              <span>Nome da empresa é obrigatório</span>
+              <span>Razão social é obrigatória</span>
             </div>
           }
         </div>
 
-      
+        <div class="register-form__item">
+          <label for="company-cnpj">CNPJ:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="company-cnpj"
+            name="cnpj"
+            placeholder="Digite o CNPJ"
+            formControlName="cnpj"
+          />
+
+          @if (companyForm.get('cnpj')?.invalid && companyForm.get('cnpj')?.touched) {
+            <div class="register-form__error">
+              <span>CNPJ é obrigatório</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="company-sector">Setor:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="company-sector"
+            name="setor"
+            placeholder="Digite o setor"
+            formControlName="setor"
+          />
+
+          @if (companyForm.get('setor')?.invalid && companyForm.get('setor')?.touched) {
+            <div class="register-form__error">
+              <span>Setor é obrigatório</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="company-location">Localização:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="company-location"
+            name="localizacao"
+            placeholder="Digite a localização"
+            formControlName="localizacao"
+          />
+
+          @if (companyForm.get('localizacao')?.invalid && companyForm.get('localizacao')?.touched) {
+            <div class="register-form__error">
+              <span>Localização é obrigatória</span>
+            </div>
+          }
+        </div>
+
+        <div class="register-form__item">
+          <label for="company-link">Link:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="company-link"
+            name="link"
+            placeholder="Site da empresa (opcional)"
+            formControlName="link"
+          />
+        </div>
+
+        <div class="register-form__item">
+          <label for="company-description">Descrição:</label>
+          <input
+            class="register-form__input"
+            type="text"
+            id="company-description"
+            name="descricao"
+            placeholder="Descrição (opcional)"
+            formControlName="descricao"
+          />
+        </div>
 
         <div class="register-form__item">
           <label for="company-email">Email corporativo:</label>
@@ -152,12 +298,12 @@
             class="register-form__input"
             type="password"
             id="company-password"
-            name="password"
+            name="senha"
             placeholder="Digite sua senha"
-            formControlName="password"
+            formControlName="senha"
           />
 
-          @if (companyForm.get('password')?.invalid && companyForm.get('password')?.touched) {
+          @if (companyForm.get('senha')?.invalid && companyForm.get('senha')?.touched) {
             <div class="register-form__error">
               <span>Senha inválida</span>
             </div>

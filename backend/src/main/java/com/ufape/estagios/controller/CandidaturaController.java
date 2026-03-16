@@ -2,24 +2,16 @@ package com.ufape.estagios.controller;
 
 import java.util.List;
 
+import com.ufape.estagios.dto.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.ufape.estagios.dto.CandidaturaRequestDTO;
-import com.ufape.estagios.dto.CandidaturaResponseDTO;
 import com.ufape.estagios.mapper.CandidaturaMapper;
 import com.ufape.estagios.model.Candidatura;
 import com.ufape.estagios.service.CandidaturaService;
-import com.ufape.estagios.dto.EstudanteResumoResponseDTO;
-import com.ufape.estagios.dto.EstudanteResponseDTO;
 
 @RestController
 @RequestMapping("/api/candidatura")
@@ -41,6 +33,14 @@ public class CandidaturaController {
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
+	
+	@PutMapping("/{id}/resultado-entrevista")
+	public ResponseEntity<ResultadoEntrevistaResponseDTO> registrarResultadoEntrevista(@PathVariable Long id, @RequestBody @Valid ResultadoEntrevistaRequestDTO dto) {
+		ResultadoEntrevistaResponseDTO response = candidaturaService.registrarResultadoEntrevista(id, dto);
+		return ResponseEntity.ok(response);
+	}
+	 
 	
 	@GetMapping("/vaga/{vagaId}")
 	public ResponseEntity<?> listarCandidaturasDaVaga(@PathVariable Long vagaId){

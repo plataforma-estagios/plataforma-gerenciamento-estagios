@@ -59,7 +59,7 @@ public class Vaga {
 
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
-    private Usuario empresa;
+    private Empresa empresa;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

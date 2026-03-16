@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufape.estagios.dto.AuthenticationDTO;
+import com.ufape.estagios.dto.CandidatoRegisterDTO;
+import com.ufape.estagios.dto.EmpresaRegisterDTO;
 import com.ufape.estagios.dto.LoginResponseDTO;
 import com.ufape.estagios.dto.RegisterDTO;
 import com.ufape.estagios.service.AuthorizationService;
@@ -28,9 +30,16 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
-        authorizationService.doRegister(data);
+    @PostMapping("/register/candidato")
+    public ResponseEntity<?> registerCandidato(@RequestBody @Valid CandidatoRegisterDTO candidatoRegister) {
+        authorizationService.candidatoRegistro(candidatoRegister);
+
+        return ResponseEntity.ok().build();
+    }
+    
+    @PostMapping("/register/empresa")
+    public ResponseEntity<?> registerEmpresa(@RequestBody @Valid EmpresaRegisterDTO empresaRegister) {
+        authorizationService.empresaRegistro(empresaRegister);
 
         return ResponseEntity.ok().build();
     }

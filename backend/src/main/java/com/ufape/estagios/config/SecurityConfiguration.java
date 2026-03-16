@@ -35,15 +35,20 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/vagas").hasRole("COMPANY")
-                        .requestMatchers(HttpMethod.GET, "/api/vagas").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/vagas/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/vagas/minhas-vagas").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.PUT, "/api/vagas/**").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.DELETE, "/api/vagas/**").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.POST, "/api/candidatura").hasRole("CANDIDATE")
                         .requestMatchers(HttpMethod.POST, "/api/candidatura/**").hasRole("CANDIDATE")
                         .requestMatchers(HttpMethod.PUT, "/api/candidatura/**").hasRole("COMPANY")
-                        .requestMatchers(HttpMethod.GET, "/api/candidatura/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/candidatura/**").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/api/candidatura/vaga/**").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/api/candidatura/minhas-candidaturas").hasRole("CANDIDATE")
+                        .requestMatchers(HttpMethod.POST, "/api/entrevistas").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/api/notificacoes/**").hasRole("CANDIDATE")
+                        .requestMatchers(HttpMethod.PUT, "/api/notificacoes/**").hasRole("CANDIDATE")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -59,7 +64,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*")); 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATHC" , "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

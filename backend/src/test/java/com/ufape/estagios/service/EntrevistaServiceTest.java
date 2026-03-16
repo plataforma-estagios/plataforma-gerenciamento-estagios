@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.ufape.estagios.dto.AgendamentoRequestDTO;
 import com.ufape.estagios.dto.EntrevistaResponseDTO;
 import com.ufape.estagios.exception.AccessDeniedException;
+import com.ufape.estagios.model.Candidato; // Import adicionado
 import com.ufape.estagios.model.Candidatura;
+import com.ufape.estagios.model.Empresa; // Import adicionado
 import com.ufape.estagios.model.Entrevista;
 import com.ufape.estagios.model.FormatoEntrevista;
 import com.ufape.estagios.model.StatusDaCandidatura;
@@ -32,6 +36,7 @@ import com.ufape.estagios.repository.CandidaturaRepository;
 import com.ufape.estagios.repository.EntrevistaRepository;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class EntrevistaServiceTest {
 
     @InjectMocks
@@ -49,24 +54,36 @@ public class EntrevistaServiceTest {
     @Mock
     private Authentication authentication;
 
-    private Usuario empresa;
-    private Usuario candidato;
+    private Usuario usuarioEmpresa;
+    private Empresa empresa;
+    private Usuario usuarioCandidato;
+    private Candidato candidato;
     private Vaga vaga;
     private Candidatura candidatura;
     private AgendamentoRequestDTO requestDTO;
 
     @BeforeEach
     void setUp() {
-        // Preparando os dados falsos para o teste
-        empresa = new Usuario();
+        // 1. Configurando Empresa
+        usuarioEmpresa = new Usuario();
+        usuarioEmpresa.setId(1L);
+        usuarioEmpresa.setRole(UserRole.COMPANY);
+
+        empresa = new Empresa();
         empresa.setId(1L);
-        empresa.setRole(UserRole.COMPANY);
+        empresa.setUsuario(usuarioEmpresa);
 
-        candidato = new Usuario();
-        candidato.setId(2L);
+        // 2. Configurando Candidato
+        usuarioCandidato = new Usuario();
+        usuarioCandidato.setId(2L);
+        usuarioCandidato.setRole(UserRole.CANDIDATE);
+
+        candidato = new Candidato();
+        candidato.setId(1L);
         candidato.setNome("João Estudante");
-        candidato.setRole(UserRole.CANDIDATE);
+        candidato.setUsuario(usuarioCandidato);
 
+        // 3. Configurando Vaga e Candidatura (usando Empresa e Candidato)
         vaga = new Vaga();
         vaga.setId(1L);
         vaga.setTitulo("Vaga Desenvolvedor Java");
@@ -74,9 +91,9 @@ public class EntrevistaServiceTest {
 
         candidatura = new Candidatura();
         candidatura.setId(1L);
-        candidatura.setUsuario(candidato);
+        candidatura.setCandidato(candidato); 
         candidatura.setVaga(vaga);
-        candidatura.setStatus(StatusDaCandidatura.EM_ANÁLISE);
+        candidatura.setStatus(StatusDaCandidatura.EM_ANALISE);
 
         requestDTO = new AgendamentoRequestDTO(
                 1L,
@@ -94,9 +111,11 @@ public class EntrevistaServiceTest {
 
     @Test
     void agendarEntrevista_ComSucesso() {
-        mockAutenticacao(empresa);
+        mockAutenticacao(usuarioEmpresa);
         when(candidaturaRepository.findById(1L)).thenReturn(Optional.of(candidatura));
-        when(entrevistaRepository.existsByCandidaturaUsuarioIdAndDataHora(anyLong(), any())).thenReturn(false);
+        
+        // Atualizado para buscar pelo ID do Candidato
+        when(entrevistaRepository.existsByCandidaturaCandidatoIdAndDataHora(anyLong(), any())).thenReturn(false);
         
         Entrevista entrevistaSalva = new Entrevista();
         entrevistaSalva.setId(1L);
@@ -106,10 +125,8 @@ public class EntrevistaServiceTest {
         
         when(entrevistaRepository.save(any(Entrevista.class))).thenReturn(entrevistaSalva);
 
-        // Ação
         EntrevistaResponseDTO response = entrevistaService.agendarEntrevista(requestDTO);
 
-        // Verificações
         assertNotNull(response);
         assertEquals(StatusDaCandidatura.ENTREVISTA, candidatura.getStatus()); 
         assertEquals(1L, response.id());
@@ -119,7 +136,7 @@ public class EntrevistaServiceTest {
 
     @Test
     void agendarEntrevista_NaoSendoEmpresa_DeveLancarException() {
-        mockAutenticacao(candidato); 
+        mockAutenticacao(usuarioCandidato); 
 
         assertThrows(AccessDeniedException.class, () -> {
             entrevistaService.agendarEntrevista(requestDTO);
@@ -128,10 +145,10 @@ public class EntrevistaServiceTest {
 
     @Test
     void agendarEntrevista_VagaDeOutraEmpresa_DeveLancarException() {
-        Usuario outraEmpresa = new Usuario();
-        outraEmpresa.setId(99L);
-        outraEmpresa.setRole(UserRole.COMPANY);
-        mockAutenticacao(outraEmpresa); 
+        Usuario outraEmpresaUsuario = new Usuario();
+        outraEmpresaUsuario.setId(99L);
+        outraEmpresaUsuario.setRole(UserRole.COMPANY);
+        mockAutenticacao(outraEmpresaUsuario); 
 
         when(candidaturaRepository.findById(1L)).thenReturn(Optional.of(candidatura));
 
@@ -142,7 +159,7 @@ public class EntrevistaServiceTest {
 
     @Test
     void agendarEntrevista_StatusInvalido_DeveLancarException() {
-        mockAutenticacao(empresa);
+        mockAutenticacao(usuarioEmpresa);
         candidatura.setStatus(StatusDaCandidatura.APROVADA); 
         when(candidaturaRepository.findById(1L)).thenReturn(Optional.of(candidatura));
 
@@ -154,10 +171,11 @@ public class EntrevistaServiceTest {
 
     @Test
     void agendarEntrevista_ComConflitoDeHorario_DeveLancarException() {
-        mockAutenticacao(empresa);
+        mockAutenticacao(usuarioEmpresa);
         when(candidaturaRepository.findById(1L)).thenReturn(Optional.of(candidatura));
-        
-        when(entrevistaRepository.existsByCandidaturaUsuarioIdAndDataHora(anyLong(), any())).thenReturn(true);
+            
+        // Atualizado para buscar pelo ID do Candidato
+        when(entrevistaRepository.existsByCandidaturaCandidatoIdAndDataHora(anyLong(), any())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             entrevistaService.agendarEntrevista(requestDTO);

@@ -15,7 +15,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:4200", "https://backend-estagios.onrender.com")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
             }
         };
     }

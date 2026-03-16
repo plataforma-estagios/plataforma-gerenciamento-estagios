@@ -3,6 +3,7 @@ package com.ufape.estagios.service;
 import com.ufape.estagios.dto.VagaRequestDTO;
 import com.ufape.estagios.dto.VagaResponseDTO;
 import com.ufape.estagios.model.*;
+import com.ufape.estagios.repository.EmpresaRepository;
 import com.ufape.estagios.repository.VagaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ class VagaServiceTest {
     private VagaRepository vagaRepository;
 
     @Mock
+    private EmpresaRepository empresaRepository; // Adicionado mock do EmpresaRepository
+
+    @Mock
     private SecurityContext securityContext;
 
     @Mock
@@ -43,14 +47,21 @@ class VagaServiceTest {
     @InjectMocks
     private VagaService vagaService;
 
-    private Usuario empresa;
+    private Usuario usuarioEmpresa; // Renomeado para não confundir
+    private Empresa empresa; // Nova entidade Empresa
     private Usuario candidato;
     private VagaRequestDTO vagaRequestDTO;
     private Vaga vaga;
 
     @BeforeEach
     void setUp() {
-        empresa = new Usuario(1L, "empresa@test.com", "password", UserRole.COMPANY, null, null, null);
+        usuarioEmpresa = new Usuario(1L, "empresa@test.com", "password", UserRole.COMPANY, null, null, null);
+        
+        // Criando a Empresa e associando o Usuário a ela
+        empresa = new Empresa();
+        empresa.setId(1L);
+        empresa.setUsuario(usuarioEmpresa);
+
         candidato = new Usuario(2L, "candidato@test.com", "password", UserRole.CANDIDATE, null, null, null);
 
         vagaRequestDTO = new VagaRequestDTO(
@@ -63,7 +74,8 @@ class VagaServiceTest {
                 LocalDate.now().plusDays(30),
                 "Vale alimentação, Vale transporte",
                 "R$ 3.500,00",
-                TipoVaga.EMPREGO
+                TipoVaga.EMPREGO,
+                StatusDaVaga.EM_ABERTO
         );
 
         vaga = new Vaga();
@@ -79,11 +91,16 @@ class VagaServiceTest {
         vaga.setPrazoCandidatura(LocalDate.now().plusDays(30));
         vaga.setBeneficios("Vale alimentação, Vale transporte");
         vaga.setSalario("R$ 3.500,00");
-        vaga.setEmpresa(empresa);
+        
+        // CORREÇÃO 1: Passando a entidade 'Empresa' ao invés de 'Usuario'
+        vaga.setEmpresa(empresa); 
         vaga.setAtiva(true);
 
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
+        
+        // Configuração padrão para quando o serviço buscar a empresa do usuário logado
+        when(empresaRepository.findByUsuario(usuarioEmpresa)).thenReturn(Optional.of(empresa));
     }
 
     @Test
@@ -101,7 +118,7 @@ class VagaServiceTest {
 
     @Test
     void deveCadastrarVagaComSucesso() {
-        when(authentication.getPrincipal()).thenReturn(empresa);
+        when(authentication.getPrincipal()).thenReturn(usuarioEmpresa);
         when(vagaRepository.save(any(Vaga.class))).thenReturn(vaga);
 
         VagaResponseDTO response = vagaService.cadastrarVaga(vagaRequestDTO);
@@ -130,8 +147,10 @@ class VagaServiceTest {
 
     @Test
     void deveListarMinhasVagasComSucesso() {
-        when(authentication.getPrincipal()).thenReturn(empresa);
-        when(vagaRepository.findByEmpresa(empresa)).thenReturn(Arrays.asList(vaga));
+        when(authentication.getPrincipal()).thenReturn(usuarioEmpresa);
+        
+        // CORREÇÃO 2: Passando a 'Empresa' na busca do repositório
+        when(vagaRepository.findByEmpresa(empresa)).thenReturn(Arrays.asList(vaga)); 
 
         List<VagaResponseDTO> response = vagaService.listarMinhasVagas();
 
@@ -150,7 +169,7 @@ class VagaServiceTest {
 
     @Test
     void deveAtualizarVagaComSucesso() {
-        when(authentication.getPrincipal()).thenReturn(empresa);
+        when(authentication.getPrincipal()).thenReturn(usuarioEmpresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
         when(vagaRepository.save(any(Vaga.class))).thenReturn(vaga);
 
@@ -162,12 +181,11 @@ class VagaServiceTest {
 
     @Test
     void deveDesativarVagaComSucesso() {
-        when(authentication.getPrincipal()).thenReturn(empresa);
+        when(authentication.getPrincipal()).thenReturn(usuarioEmpresa);
         when(vagaRepository.findById(1L)).thenReturn(Optional.of(vaga));
 
         vagaService.desativarVaga(1L);
 
-        // CORREÇÃO: Usando isAtiva() em vez de getAtiva()
         assertFalse(vaga.isAtiva()); 
         verify(vagaRepository).save(vaga);
     }

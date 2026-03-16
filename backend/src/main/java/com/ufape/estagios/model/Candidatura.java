@@ -2,6 +2,7 @@ package com.ufape.estagios.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,25 +23,35 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Candidatura {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotNull(message = "O usuário é obrigatório")
-    @ManyToOne
-	@JoinColumn(name = "usuario_id")
-	private Usuario usuario; //mudar para a classe estudante quando for implementada
-	
+	@ManyToOne
+	@JoinColumn(name = "candidato_id")
+	private Candidato candidato;
+
 	@NotNull(message = "A vaga é obrigatória")
-    @ManyToOne
+	@ManyToOne
 	@JoinColumn(name = "vaga_id")
 	private Vaga vaga;
-	
+
 	@NotNull(message = "A data é obrigatória")
 	private LocalDateTime dataDaCandidatura;
-	
+
 	@NotNull(message = "O status é obrigatório")
 	@Enumerated(value = EnumType.STRING)
 	private StatusDaCandidatura status;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "resultado_entrevista")
+	private StatusDaCandidatura resultadoEntrevista;
+
+	@Column(name = "comentario_entrevista", length = 1000)
+	private String comentarioEntrevista;
+
+	@Column(name = "data_resultado_entrevista")
+	private LocalDateTime dataResultadoEntrevista;
 }

@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
@@ -8,6 +9,7 @@ import { provideNgxMask } from 'ngx-mask';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
     provideRouter(routes),
     provideNgxMask(),
     provideToastr({

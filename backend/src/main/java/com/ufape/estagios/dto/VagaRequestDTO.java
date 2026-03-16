@@ -1,6 +1,7 @@
 package com.ufape.estagios.dto;
 
 import com.ufape.estagios.model.Localizacao;
+import com.ufape.estagios.model.StatusDaVaga;
 import com.ufape.estagios.model.TipoVaga;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -37,5 +38,7 @@ public record VagaRequestDTO(
 
         String salario,
         
-        TipoVaga tipoVaga
+        TipoVaga tipoVaga,
+        
+        StatusDaVaga status
 ){}
