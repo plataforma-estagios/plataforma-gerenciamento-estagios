@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { CandidaturaModel } from './models/CandidaturaModel';
 import { EstudanteModel, EstudanteResumoModel } from './models/EstudanteModel';
 import { StatusDaCandidatura } from './models/StatusDaCandidatura';
+import { ResultadoEntrevistaRequestModel, ResultadoEntrevistaResponseModel } from './models/ResultadoEntrevistaModel';
 
 @Injectable({
   providedIn: 'root',
@@ -44,5 +45,13 @@ export class CandidaturaService {
 
   getPerfilCompleto(candidaturaId: number): Observable<EstudanteModel> {
     return this.http.get<EstudanteModel>(`${this.apiUrl}/${candidaturaId}/perfil`, this.getHeaders());
+  }
+
+  registrarResultadoEntrevista(candidaturaId: number, request: ResultadoEntrevistaRequestModel): Observable<ResultadoEntrevistaResponseModel> {
+    return this.http.patch<ResultadoEntrevistaResponseModel>(
+      `${this.apiUrl}/${candidaturaId}/resultado-entrevista`,
+      request,
+      this.getHeaders()
+    );
   }
 }

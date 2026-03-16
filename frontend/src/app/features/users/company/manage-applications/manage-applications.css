@@ -87,6 +87,14 @@
     color: #ffc107;
 }
 
+.status-button.result {
+    color: #6f42c1;
+}
+
+.status-button.edit-status {
+    color: #17a2b8;
+}
+
 .status-approved {
     color: #28a745;
     font-weight: bold;
@@ -109,6 +117,11 @@
 
 .status-default {
     color: #6c757d;
+}
+
+.status-next-step {
+    color: #6f42c1;
+    font-weight: bold;
 }
 
 .profile-modal-content {
@@ -202,4 +215,112 @@
 .btn-submit:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.resultado-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.resultado-badge--pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.resultado-badge--approved {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.resultado-badge--rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.resultado-badge--next-step {
+    background-color: #e8dff5;
+    color: #6f42c1;
+}
+
+.resultado-badge--none {
+    background-color: #f0f0f0;
+    color: #999;
+}
+
+.status-modal-content {
+    padding: 1rem;
+}
+
+.status-modal-candidate-info {
+    margin-bottom: 0.5rem;
+}
+
+.status-modal-candidate-info p {
+    margin: 0.25rem 0;
+    font-size: 1rem;
+}
+
+.status-modal-divider {
+    margin: 1rem 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.result-modal-content {
+    padding: 1rem;
+}
+
+.result-modal-candidate-info {
+    margin-bottom: 1rem;
+}
+
+.result-modal-candidate-info p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.result-modal-loading {
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+}
+
+.result-modal-interview-details {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.result-modal-interview-details h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.interview-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.interview-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.interview-info-item--full {
+    grid-column: 1 / -1;
+}
+
+.result-modal-divider {
+    margin: 1.25rem 0;
+    border: 0;
+    border-top: 1px solid #eee;
 }

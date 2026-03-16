@@ -5,10 +5,11 @@ import { CandidaturaService } from '../../../../shared/services/candidatura.serv
 import { EntrevistaService } from '../../../../shared/services/entrevista.service';
 import { CandidaturaModel } from '../../../../shared/services/models/CandidaturaModel';
 import { EstudanteModel, EstudanteResumoModel } from '../../../../shared/services/models/EstudanteModel';
+import { EntrevistaModel } from '../../../../shared/services/models/EntrevistaModel';
 import { StatusDaCandidatura } from '../../../../shared/services/models/StatusDaCandidatura';
 import { FormatoEntrevista } from '../../../../shared/services/models/FormatoEntrevista';
 import { Modal } from '../../../../shared/component/modal/modal';
-import { LucideAngularModule, EyeIcon, CheckCircleIcon, XCircleIcon, ClockIcon, UserIcon } from 'lucide-angular';
+import { LucideAngularModule, EyeIcon, CheckCircleIcon, XCircleIcon, ClockIcon, UserIcon, FileTextIcon, CalendarIcon, PencilIcon } from 'lucide-angular';
 import { DatePipe, CommonModule } from '@angular/common';
 
 @Component({
@@ -37,11 +38,24 @@ export class ManageApplications implements OnInit {
   interviewForm: FormGroup;
   FormatoEntrevista = FormatoEntrevista;
 
+  resultModalOpen = false;
+  resultForm: FormGroup;
+  interviewDetails = signal<EntrevistaModel | null>(null);
+  loadingInterview = false;
+  submittingResult = false;
+
+  statusModalOpen = false;
+  statusForm: FormGroup;
+  submittingStatus = false;
+
   EyeIcon = EyeIcon;
   CheckCircleIcon = CheckCircleIcon;
   XCircleIcon = XCircleIcon;
   ClockIcon = ClockIcon;
   UserIcon = UserIcon;
+  FileTextIcon = FileTextIcon;
+  CalendarIcon = CalendarIcon;
+  PencilIcon = PencilIcon;
 
   StatusDaCandidatura = StatusDaCandidatura;
 
@@ -50,6 +64,15 @@ export class ManageApplications implements OnInit {
       dataHora: ['', Validators.required],
       formato: [FormatoEntrevista.ONLINE, Validators.required],
       detalhes: ['']
+    });
+
+    this.resultForm = this.fb.group({
+      resultado: ['', Validators.required],
+      comentario: ['']
+    });
+
+    this.statusForm = this.fb.group({
+      status: ['', Validators.required]
     });
   }
 
@@ -100,14 +123,56 @@ export class ManageApplications implements OnInit {
     this.viewingFullProfile = false;
   }
 
-  updateStatus(candidatura: CandidaturaModel, status: StatusDaCandidatura) {
-    if (confirm(`Tem certeza que deseja alterar o status para ${status}?`)) {
-      this.candidaturaService.atualizarStatus(candidatura.id, status).subscribe({
-        next: () => {
-          this.loadCandidaturas();
-        },
-        error: (err) => console.error('Error updating status', err)
-      });
+  openStatusModal(candidatura: CandidaturaModel) {
+    this.selectedCandidatura.set(candidatura);
+    this.submittingStatus = false;
+    this.statusForm.reset({ status: candidatura.status });
+    this.statusModalOpen = true;
+  }
+
+  closeStatusModal() {
+    this.statusModalOpen = false;
+    this.selectedCandidatura.set(null);
+    this.submittingStatus = false;
+  }
+
+  submitStatusChange() {
+    if (this.statusForm.invalid || !this.selectedCandidatura()) return;
+
+    const newStatus = this.statusForm.value.status;
+    if (newStatus === this.selectedCandidatura()!.status) {
+      this.closeStatusModal();
+      return;
+    }
+
+    this.submittingStatus = true;
+    this.candidaturaService.atualizarStatus(this.selectedCandidatura()!.id, newStatus).subscribe({
+      next: () => {
+        alert('Status atualizado com sucesso!');
+        this.closeStatusModal();
+        this.loadCandidaturas();
+      },
+      error: (err) => {
+        this.submittingStatus = false;
+        console.error('Error updating status', err);
+        const errorMessage = typeof err.error === 'string'
+          ? err.error
+          : (err.error?.message || 'Erro ao atualizar status da candidatura.');
+        alert(errorMessage);
+      }
+    });
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case StatusDaCandidatura.SUBMETIDA: return 'Submetida';
+      case StatusDaCandidatura.EM_ANÁLISE: return 'Em Análise';
+      case StatusDaCandidatura.ENTREVISTA: return 'Entrevista';
+      case StatusDaCandidatura.PROXIMA_ETAPA: return 'Próxima Etapa';
+      case StatusDaCandidatura.APROVADA: return 'Aprovada';
+      case StatusDaCandidatura.REPROVADA: return 'Reprovada';
+      case StatusDaCandidatura.CANCELADA: return 'Cancelada';
+      default: return status;
     }
   }
 
@@ -151,13 +216,75 @@ export class ManageApplications implements OnInit {
     });
   }
 
+  openResultModal(candidatura: CandidaturaModel) {
+    this.selectedCandidatura.set(candidatura);
+    this.interviewDetails.set(null);
+    this.loadingInterview = true;
+    this.submittingResult = false;
+
+    this.resultForm.reset({
+      resultado: '',
+      comentario: ''
+    });
+
+    this.entrevistaService.getEntrevistaPorCandidatura(candidatura.id).subscribe({
+      next: (data) => {
+        this.interviewDetails.set(data);
+        this.loadingInterview = false;
+        this.resultModalOpen = true;
+      },
+      error: () => {
+        this.loadingInterview = false;
+        this.resultModalOpen = true;
+      }
+    });
+  }
+
+  closeResultModal() {
+    this.resultModalOpen = false;
+    this.selectedCandidatura.set(null);
+    this.interviewDetails.set(null);
+    this.submittingResult = false;
+  }
+
+  submitInterviewResult() {
+    if (this.resultForm.invalid || !this.selectedCandidatura()) return;
+
+    this.submittingResult = true;
+    const formValue = this.resultForm.value;
+
+    this.candidaturaService.registrarResultadoEntrevista(this.selectedCandidatura()!.id, {
+      resultado: formValue.resultado,
+      comentario: formValue.comentario || undefined
+    }).subscribe({
+      next: (response) => {
+        alert(response.mensagem || 'Resultado registrado com sucesso!');
+        this.closeResultModal();
+        this.loadCandidaturas();
+      },
+      error: (err) => {
+        this.submittingResult = false;
+        console.error('Error submitting interview result', err);
+        const errorMessage = typeof err.error === 'string'
+          ? err.error
+          : (err.error?.message || 'Erro ao registrar resultado da entrevista.');
+        alert(errorMessage);
+      }
+    });
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
       case StatusDaCandidatura.APROVADA: return 'status-approved';
       case StatusDaCandidatura.REPROVADA: return 'status-rejected';
       case StatusDaCandidatura.ENTREVISTA: return 'status-interview';
       case StatusDaCandidatura.EM_ANÁLISE: return 'status-analysis';
+      case StatusDaCandidatura.PROXIMA_ETAPA: return 'status-next-step';
       default: return 'status-default';
     }
+  }
+
+  getFormatoLabel(formato: string): string {
+    return formato === FormatoEntrevista.ONLINE ? 'Online' : 'Presencial';
   }
 }

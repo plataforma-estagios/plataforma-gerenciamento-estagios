@@ -20,6 +20,7 @@
                         <th>Candidato</th>
                         <th>Data</th>
                         <th>Status</th>
+                        <th>Resultado Entrevista</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -38,20 +39,34 @@
                             </span>
                         </td>
                         <td class="manage-jobs-container__jobs-table-body-row-cell">
+                            @if (candidatura.status === StatusDaCandidatura.ENTREVISTA) {
+                                <span class="resultado-badge resultado-badge--pending">Pendente</span>
+                            } @else if (candidatura.status === StatusDaCandidatura.APROVADA) {
+                                <span class="resultado-badge resultado-badge--approved">Aprovada</span>
+                            } @else if (candidatura.status === StatusDaCandidatura.REPROVADA) {
+                                <span class="resultado-badge resultado-badge--rejected">Reprovada</span>
+                            } @else if (candidatura.status === StatusDaCandidatura.PROXIMA_ETAPA) {
+                                <span class="resultado-badge resultado-badge--next-step">Próxima Etapa</span>
+                            } @else {
+                                <span class="resultado-badge resultado-badge--none">—</span>
+                            }
+                        </td>
+                        <td class="manage-jobs-container__jobs-table-body-row-cell">
                             <div class="manage-jobs-container__jobs-table-body-row-cell-buttons">
                                 <button class="action-button" (click)="openProfileModal(candidatura)" title="Ver Perfil">
                                     <lucide-icon [name]="EyeIcon" />
                                 </button>
-                                
-                                <button class="status-button approve" (click)="updateStatus(candidatura, StatusDaCandidatura.APROVADA)" title="Aprovar">
-                                    <lucide-icon [name]="CheckCircleIcon" />
-                                </button>
-                                <button class="status-button reject" (click)="updateStatus(candidatura, StatusDaCandidatura.REPROVADA)" title="Reprovar">
-                                    <lucide-icon [name]="XCircleIcon" />
+                                <button class="status-button edit-status" (click)="openStatusModal(candidatura)" title="Alterar Status">
+                                    <lucide-icon [name]="PencilIcon" />
                                 </button>
                                 <button class="status-button interview" (click)="openInterviewModal(candidatura)" title="Agendar Entrevista">
                                     <lucide-icon [name]="ClockIcon" />
                                 </button>
+                                @if (candidatura.status === StatusDaCandidatura.ENTREVISTA) {
+                                    <button class="status-button result" (click)="openResultModal(candidatura)" title="Registrar Resultado da Entrevista">
+                                        <lucide-icon [name]="FileTextIcon" />
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>
@@ -113,5 +128,109 @@
                 <button type="submit" class="btn-submit" [disabled]="interviewForm.invalid">Agendar</button>
             </div>
         </form>
+    </div>
+</app-modal>
+
+<app-modal [open]="statusModalOpen" (closeModal)="closeStatusModal()" title="Alterar Status da Candidatura">
+    <div class="status-modal-content">
+        @if (selectedCandidatura()) {
+            <div class="status-modal-candidate-info">
+                <p><strong>Candidato:</strong> {{ selectedCandidatura()?.nomeDoCandidato }}</p>
+                <p><strong>Status atual:</strong>
+                    <span [class]="getStatusClass(selectedCandidatura()!.status)">
+                        {{ getStatusLabel(selectedCandidatura()!.status) }}
+                    </span>
+                </p>
+            </div>
+
+            <hr class="status-modal-divider">
+
+            <form [formGroup]="statusForm" (ngSubmit)="submitStatusChange()">
+                <div class="form-group">
+                    <label for="statusSelect">Novo Status</label>
+                    <select id="statusSelect" formControlName="status" class="form-control">
+                        <option value="SUBMETIDA">Submetida</option>
+                        <option value="EM_ANÁLISE">Em Análise</option>
+                        <option value="ENTREVISTA">Entrevista</option>
+                        <option value="PROXIMA_ETAPA">Próxima Etapa</option>
+                        <option value="APROVADA">Aprovada</option>
+                        <option value="REPROVADA">Reprovada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" (click)="closeStatusModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit" [disabled]="statusForm.invalid || submittingStatus">
+                        {{ submittingStatus ? 'Atualizando...' : 'Atualizar Status' }}
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+</app-modal>
+
+<app-modal [open]="resultModalOpen" (closeModal)="closeResultModal()" title="Resultado da Entrevista">
+    <div class="result-modal-content">
+        @if (selectedCandidatura()) {
+            <div class="result-modal-candidate-info">
+                <p><strong>Candidato:</strong> {{ selectedCandidatura()?.nomeDoCandidato }}</p>
+            </div>
+
+            @if (loadingInterview) {
+                <div class="result-modal-loading">
+                    <p>Carregando dados da entrevista...</p>
+                </div>
+            }
+
+            @if (interviewDetails()) {
+                <div class="result-modal-interview-details">
+                    <h4>Dados da Entrevista</h4>
+                    <div class="interview-info-grid">
+                        <div class="interview-info-item">
+                            <lucide-icon [name]="CalendarIcon" [size]="16" />
+                            <span>{{ interviewDetails()?.dataHora | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </div>
+                        <div class="interview-info-item">
+                            <lucide-icon [name]="UserIcon" [size]="16" />
+                            <span>{{ getFormatoLabel(interviewDetails()!.formato) }}</span>
+                        </div>
+                        @if (interviewDetails()?.detalhes) {
+                            <div class="interview-info-item interview-info-item--full">
+                                <lucide-icon [name]="FileTextIcon" [size]="16" />
+                                <span>{{ interviewDetails()?.detalhes }}</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <hr class="result-modal-divider">
+
+            <form [formGroup]="resultForm" (ngSubmit)="submitInterviewResult()">
+                <div class="form-group">
+                    <label for="resultado">Resultado</label>
+                    <select id="resultado" formControlName="resultado" class="form-control">
+                        <option value="" disabled>Selecione o resultado</option>
+                        <option [value]="StatusDaCandidatura.APROVADA">Aprovado(a)</option>
+                        <option [value]="StatusDaCandidatura.REPROVADA">Reprovado(a)</option>
+                        <option [value]="StatusDaCandidatura.PROXIMA_ETAPA">Próxima Etapa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comentario">Comentário</label>
+                    <textarea id="comentario" formControlName="comentario" class="form-control" rows="4"
+                              placeholder="Adicione observações sobre o desempenho do candidato na entrevista..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" (click)="closeResultModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit" [disabled]="resultForm.invalid || submittingResult">
+                        {{ submittingResult ? 'Registrando...' : 'Registrar Resultado' }}
+                    </button>
+                </div>
+            </form>
+        }
     </div>
 </app-modal>
