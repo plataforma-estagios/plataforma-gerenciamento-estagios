@@ -100,7 +100,7 @@ O projeto está estruturado em dois diretórios principais (`/backend` e `/front
 Evidências execução SonarCloud
 ![1772156748702](image/README/1772156748702.png)
 
-### 🚧 Iteração 5: Candidaturas e Processo Seletivo (Em Andamento)
+### ✅ Iteração 5: Candidaturas e Processo Seletivo (Concluída)
 
 Nesta etapa, o foco é a implementação do fluxo completo de seleção, permitindo a interação direta entre estudantes e empresas através de candidaturas e agendamentos.
 
@@ -116,17 +116,17 @@ Nesta etapa, o foco é a implementação do fluxo completo de seleção, permiti
 - [x] **Integração Front-Back:** Garantir que todas as novas funcionalidades de candidatura e agendamento estejam comunicando perfeitamente em produção (Render).
 - [x] **Novo Release:** Publicação da versão estável da Quinta Iteração no GitHub.
 
-### 🚧 Iteração 6: Correções, Integração e Novas Funcionalidades (Em Andamento)
+### ✅ Iteração 6: Correções, Integração e Novas Funcionalidades (Concluída)
 
 Nesta etapa, o foco é a correção de pendências das revisões passadas, a implementação das histórias de usuário especificadas no Quadro Scrum, a garantia de integração total entre os sistemas e a manutenção rigorosa das métricas de qualidade de código.
 
 **Histórias de Usuário e Funcionalidades:**
-- [ ] **H10 – Registro de resultado da entrevista:** Permitir que a empresa registre a aprovação ou reprovação de um candidato após a fase de entrevistas.
-- [ ] **H11 – Notificação de resultado da candidatura:** Disparar e exibir avisos automáticos para os estudantes informando se foram aprovados ou reprovados nas seleções.
-- [ ] **Integração Total:** Garantir integração total entre o frontend e o backend, permitindo acesso às novas funcionalidades apenas por usuários autenticados e autorizados.
-- [ ] **Correções Pendentes:** Concluir a correção de todos os problemas e bugs apontados nas revisões das iterações anteriores.
+- [X] **H10 – Registro de resultado da entrevista:** Permitir que a empresa registre a aprovação ou reprovação de um candidato após a fase de entrevistas.
+- [X] **H11 – Notificação de resultado da candidatura:** Disparar e exibir avisos automáticos para os estudantes informando se foram aprovados ou reprovados nas seleções.
+- [X] **Integração Total:** Garantir integração total entre o frontend e o backend, permitindo acesso às novas funcionalidades apenas por usuários autenticados e autorizados.
+- [X] **Correções Pendentes:** Concluir a correção de todos os problemas e bugs apontados nas revisões das iterações anteriores.
 
 **Qualidade, Testes e Entrega:**
-- [ ] **Cobertura de Testes (JaCoCo):** Manter a cobertura mínima de **70% de instruções** e **80% de branches** no Backend.
-- [ ] **Qualidade de Código (SonarCloud):** Assegurar 0 Security Issues, 0 Maintainability Issues e duplicação de código abaixo de 20%.
-- [ ] **Novo Release:** Publicação da versão estável da Sexta Iteração no repositório principal (RP).
+- [X] **Cobertura de Testes (JaCoCo):** Manter a cobertura mínima de **70% de instruções** e **80% de branches** no Backend.
+- [X] **Qualidade de Código (SonarCloud):** Assegurar 0 Security Issues, 0 Maintainability Issues e duplicação de código abaixo de 20%.
+- [X] **Novo Release:** Publicação da versão estável da Sexta Iteração no repositório principal (RP).
