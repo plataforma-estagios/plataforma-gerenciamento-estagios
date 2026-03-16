@@ -35,7 +35,7 @@ public class CandidaturaController {
 	}
 
 	
-	@PatchMapping("/{id}/resultado-entrevista")
+	@PutMapping("/{id}/resultado-entrevista")
 	public ResponseEntity<ResultadoEntrevistaResponseDTO> registrarResultadoEntrevista(@PathVariable Long id, @RequestBody @Valid ResultadoEntrevistaRequestDTO dto) {
 		ResultadoEntrevistaResponseDTO response = candidaturaService.registrarResultadoEntrevista(id, dto);
 		return ResponseEntity.ok(response);
